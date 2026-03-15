@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sevgilim Olur musun? 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#1a0010 0%,#3d0020 40%,#1a0010 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Lato',sans-serif;overflow:hidden;position:relative;
+  }
+  .hearts-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+  .floating-heart{position:absolute;animation:floatUp linear infinite;opacity:0;}
+  @keyframes floatUp{
+    0%{transform:translateY(100vh) rotate(-15deg);opacity:0;}
+    10%{opacity:.6;}90%{opacity:.3;}
+    100%{transform:translateY(-10vh) rotate(15deg);opacity:0;}
+  }
+
+  /* MAIN CARD */
+  .card{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,150,150,.25);
+    border-radius:24px;padding:48px 52px;text-align:center;
+    position:relative;z-index:10;max-width:480px;width:90%;
+    backdrop-filter:blur(12px);
+    box-shadow:0 0 60px rgba(220,50,80,.15),inset 0 0 40px rgba(255,80,100,.04);
+    animation:cardIn 1s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+  .big-heart{font-size:64px;display:block;margin-bottom:16px;animation:heartbeat 1.4s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,80,100,.7));}
+  @keyframes heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.15);}28%{transform:scale(1);}42%{transform:scale(1.1);}56%{transform:scale(1);}}
+  .name-label{font-family:'Lato',sans-serif;font-weight:300;font-size:13px;color:rgba(255,200,200,.6);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;}
+  .name-display{font-family:'Playfair Display',serif;font-size:38px;font-weight:400;font-style:italic;color:#ffd6de;margin-bottom:24px;text-shadow:0 0 30px rgba(255,150,170,.5);min-height:50px;cursor:pointer;}
+  .name-input-wrap{margin-bottom:24px;display:none;}
+  .name-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,150,150,.3);border-radius:12px;color:#ffd6de;font-family:'Playfair Display',serif;font-size:24px;font-style:italic;padding:12px 20px;text-align:center;width:100%;outline:none;}
+  .name-input::placeholder{color:rgba(255,200,200,.3);}
+  .name-input:focus{border-color:rgba(255,100,130,.6);box-shadow:0 0 20px rgba(220,50,80,.2);}
+  .edit-hint{font-size:11px;color:rgba(255,200,200,.3);margin-top:4px;letter-spacing:1px;cursor:pointer;}
+  .edit-hint:hover{color:rgba(255,200,200,.6);}
+  .question{font-family:'Playfair Display',serif;font-size:22px;color:#fff0f3;line-height:1.5;margin-bottom:36px;text-shadow:0 2px 15px rgba(220,50,80,.3);}
+  .buttons{display:flex;gap:16px;justify-content:center;align-items:center;position:relative;}
+  .btn-yes{background:linear-gradient(135deg,#e8334a 0%,#c0143c 100%);border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:16px;letter-spacing:1px;padding:14px 40px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.5),0 0 40px rgba(220,50,80,.2);transition:transform .15s,box-shadow .15s;position:relative;z-index:2;}
+  .btn-yes:hover{transform:scale(1.07);box-shadow:0 6px 28px rgba(220,50,80,.7);}
+  .btn-yes:active{transform:scale(.97);}
+  .btn-no{background:rgba(255,255,255,.07);border:1px solid rgba(255,150,150,.25);border-radius:50px;color:rgba(255,200,210,.7);font-family:'Lato',sans-serif;font-size:14px;letter-spacing:1px;padding:14px 32px;cursor:pointer;transition:background .2s;position:fixed;}
+  .btn-no:hover{background:rgba(255,255,255,.1);}
+
+  /* SUCCESS */
+  .success-screen{display:none;animation:fadeIn .8s ease both;}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+  .success-title{font-family:'Playfair Display',serif;font-size:42px;color:#ffd6de;margin:16px 0 8px;text-shadow:0 0 30px rgba(255,150,170,.6);}
+  .success-sub{font-family:'Lato',sans-serif;font-size:15px;color:rgba(255,200,200,.6);line-height:1.8;letter-spacing:1px;margin-bottom:28px;}
+  .btn-gallery{background:linear-gradient(135deg,#e8334a,#c0143c);border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:15px;letter-spacing:2px;padding:14px 36px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.5);transition:transform .2s,box-shadow .2s;margin-top:8px;}
+  .btn-gallery:hover{transform:scale(1.06);box-shadow:0 6px 28px rgba(220,50,80,.7);}
+
+  /* GALLERY SCREEN */
+  .gallery-screen{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(160deg,#120008 0%,#2d0018 50%,#120008 100%);z-index:200;flex-direction:column;align-items:center;justify-content:center;}
+  .gallery-title{font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:#ffd6de;margin-bottom:4px;text-shadow:0 0 20px rgba(255,150,170,.5);}
+  .gallery-sub{font-size:12px;color:rgba(255,200,200,.4);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;}
+
+  /* UPLOAD ZONE */
+  .upload-zone{width:90%;max-width:460px;border:2px dashed rgba(255,150,150,.3);border-radius:16px;padding:32px 24px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:20px;position:relative;}
+  .upload-zone:hover,.upload-zone.drag-over{border-color:rgba(255,100,130,.6);background:rgba(255,80,100,.06);}
+  .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .upload-icon{font-size:36px;margin-bottom:10px;display:block;}
+  .upload-text{color:rgba(255,200,200,.7);font-size:14px;line-height:1.7;}
+  .upload-text span{color:#ffb3c0;}
+  .upload-count{font-size:12px;color:rgba(255,200,200,.4);margin-top:8px;letter-spacing:1px;}
+  .btn-show-strip{background:linear-gradient(135deg,#e8334a,#c0143c);border:none;border-radius:50px;color:#fff;font-size:15px;letter-spacing:1px;padding:13px 36px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.5);transition:transform .2s;margin-bottom:16px;display:none;}
+  .btn-show-strip:hover{transform:scale(1.05);}
+
+  /* FILM STRIP */
+  .film-strip-wrap{width:100%;overflow:hidden;position:relative;padding:16px 0;display:none;}
+  .film-strip-wrap::before,.film-strip-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:10;pointer-events:none;}
+  .film-strip-wrap::before{left:0;background:linear-gradient(to right,#120008,transparent);}
+  .film-strip-wrap::after{right:0;background:linear-gradient(to left,#120008,transparent);}
+  .film-strip{display:flex;gap:16px;padding:0 60px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab;user-select:none;}
+  .film-strip::-webkit-scrollbar{display:none;}
+  .film-strip.grabbing{cursor:grabbing;}
+  .film-frame{flex-shrink:0;width:200px;background:#1a0010;border:2px solid rgba(255,150,150,.2);border-radius:8px;overflow:hidden;scroll-snap-align:center;transition:transform .3s,box-shadow .3s;}
+  .film-frame:hover{transform:scale(1.04) translateY(-4px);box-shadow:0 12px 40px rgba(220,50,80,.35);}
+  .film-holes{display:flex;justify-content:space-between;padding:5px 8px;background:rgba(0,0,0,.4);}
+  .film-hole{width:12px;height:12px;background:#120008;border-radius:2px;border:1px solid rgba(255,255,255,.1);}
+  .film-img{width:100%;height:150px;object-fit:cover;display:block;}
+  .film-caption{padding:8px 10px;font-family:'Playfair Display',serif;font-size:12px;font-style:italic;color:rgba(255,200,200,.6);text-align:center;background:rgba(0,0,0,.2);}
+
+  .gallery-controls{display:none;gap:24px;margin-top:24px;align-items:center;}
+  .ctrl-btn{background:none;border:1px solid rgba(255,150,150,.25);border-radius:50%;width:44px;height:44px;color:rgba(255,200,200,.7);font-size:20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+  .ctrl-btn:hover{background:rgba(255,80,100,.15);border-color:rgba(255,150,150,.5);color:#ffd6de;}
+  .strip-actions{display:none;gap:12px;margin-top:12px;align-items:center;}
+  .btn-add-more{background:none;border:1px solid rgba(255,150,150,.25);border-radius:50px;color:rgba(255,200,200,.6);font-size:12px;letter-spacing:1px;padding:8px 20px;cursor:pointer;transition:all .2s;position:relative;}
+  .btn-add-more input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .btn-add-more:hover{background:rgba(255,80,100,.1);color:#ffd6de;}
+  .btn-back{background:none;border:none;color:rgba(255,200,200,.4);font-size:12px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;margin-top:16px;transition:color .2s;}
+  .btn-back:hover{color:rgba(255,200,200,.8);}
+
+  .confetti-hearts{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;}
+  .conf-heart{position:absolute;top:-40px;animation:confettiFall 1.5s ease-in forwards;}
+  @keyframes confettiFall{to{transform:translateY(110vh) rotate(360deg);opacity:0;}}
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+<div class="confetti-hearts" id="confetti"></div>
+
+<!-- ANA KART -->
+<div class="card" id="mainCard">
+  <div id="askScreen">
+    <span class="big-heart">🫀</span>
+    <div class="name-label">Bir Sorum Var</div>
+    <div class="name-display" id="nameDisplay" onclick="editName()">Elif</div>
+    <div class="name-input-wrap" id="nameWrap">
+      <input class="name-input" id="nameInput" placeholder="Adını yaz..." maxlength="20"/>
+    </div>
+    <div class="edit-hint" onclick="editName()">✎ adı değiştir</div>
+    <div class="question" id="question">
+      Seninle birlikte her an daha güzel oluyor.<br>
+      <span style="color:#ffb3c0;">Sevgilim olur musun?</span>
+    </div>
+    <div class="buttons">
+      <button class="btn-yes" onclick="sayYes()">♡ Evet</button>
+      <button class="btn-no" id="noBtn" onmouseover="runAway()">Hayır</button>
+    </div>
+  </div>
+
+  <div class="success-screen" id="successScreen">
+    <span class="big-heart" style="font-size:80px;filter:drop-shadow(0 0 30px rgba(255,80,100,.9));">❤️</span>
+    <div class="success-title" id="successTitle">Teşekkürler!</div>
+    <div class="success-sub">
+      Şu an çok mutluyum 🥹<br>
+      Seninle olmak <span style="color:#ffd6de;">en güzel şey.</span>
+    </div>
+    <button class="btn-gallery" onclick="openGallery()">🎞️ &nbsp;Beraber Fotoğraflarımızı Gör</button>
+  </div>
+</div>
+
+<!-- GALERİ EKRANI -->
+<div class="gallery-screen" id="galleryScreen">
+  <div class="gallery-title">Bizim Anlarımız</div>
+  <div class="gallery-sub">✦ &nbsp; anılarımız &nbsp; ✦</div>
+
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" accept="image/*" multiple onchange="handleFiles(this.files)" id="fileInput"/>
+    <span class="upload-icon">📁</span>
+    <div class="upload-text">Buraya tıkla veya fotoğrafları sürükle bırak<br><span>Birden fazla seçebilirsin</span></div>
+    <div class="upload-count" id="uploadCount"></div>
+  </div>
+
+  <button class="btn-show-strip" id="btnShowStrip" onclick="buildStrip()">🎞️ &nbsp;Şeridi Göster</button>
+
+  <div class="film-strip-wrap" id="filmStripWrap">
+    <div class="film-strip" id="filmStrip"></div>
+  </div>
+
+  <div class="gallery-controls" id="galleryControls">
+    <button class="ctrl-btn" onclick="scrollStrip(-1)">‹</button>
+    <span style="font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:rgba(255,200,200,.5);">❤</span>
+    <button class="ctrl-btn" onclick="scrollStrip(1)">›</button>
+  </div>
+
+  <div class="strip-actions" id="stripActions">
+    <div class="btn-add-more">
+      + Fotoğraf Ekle
+      <input type="file" accept="image/*" multiple onchange="addMoreFiles(this.files)"/>
+    </div>
+  </div>
+
+  <button class="btn-back" onclick="closeGallery()">← Geri Dön</button>
+</div>
+
+<script>
+  var name = "Elif", noCount = 0, editing = false, photos = [];
+
+  // Uçuşan kalpler
+  (function(){
+    var bg = document.getElementById('heartsBg');
+    var syms = ['♡','❤','♥','💕'], cols = ['#ff6b8a','#ffb3c1','#ff4d6d','#c9184a','#ff85a1'];
+    for(var i = 0; i < 18; i++){
+      var h = document.createElement('div'); h.className = 'floating-heart';
+      h.textContent = syms[i % 4];
+      h.style.left = (Math.random() * 100) + '%';
+      h.style.animationDuration = (6 + Math.random() * 8) + 's';
+      h.style.animationDelay = (Math.random() * 8) + 's';
+      h.style.fontSize = (12 + Math.random() * 18) + 'px';
+      h.style.color = cols[Math.floor(Math.random() * 5)];
+      bg.appendChild(h);
+    }
+  })();
+
+  // Hayır butonu başlangıç pozisyonu
+  var noBtn = document.getElementById('noBtn');
+  noBtn.style.left = (window.innerWidth / 2 + 70) + 'px';
+  noBtn.style.top = (window.innerHeight / 2 + 20) + 'px';
+
+  function runAway(){
+    noCount++;
+    noBtn.style.left = (Math.random() * (window.innerWidth - 130)) + 'px';
+    noBtn.style.top = (Math.random() * (window.innerHeight - 60)) + 'px';
+    if(noCount >= 3){
+      document.getElementById('question').innerHTML = 'Kaçmayı bırak... 🥺<br><span style="color:#ffb3c0;">Sevgilim olur musun?</span>';
+    }
+  }
+
+  function editName(){
+    if(editing) return; editing = true;
+    document.getElementById('nameDisplay').style.display = 'none';
+    document.getElementById('nameWrap').style.display = 'block';
+    var inp = document.getElementById('nameInput'); inp.value = name; inp.focus();
+    inp.onblur = saveName;
+    inp.onkeydown = function(e){ if(e.key === 'Enter') saveName(); };
+  }
+
+  function saveName(){
+    var v = document.getElementById('nameInput').value.trim();
+    if(v) name = v;
+    document.getElementById('nameDisplay').textContent = name;
+    document.getElementById('nameDisplay').style.display = 'block';
+    document.getElementById('nameWrap').style.display = 'none';
+    editing = false;
+  }
+
+  function sayYes(){
+    launchConfetti();
+    document.getElementById('successTitle').textContent = name + ' ❤️';
+    setTimeout(function(){
+      document.getElementById('askScreen').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+      document.getElementById('noBtn').style.display = 'none';
+    }, 200);
+  }
+
+  function openGallery(){
+    document.getElementById('galleryScreen').style.display = 'flex';
+  }
+
+  function closeGallery(){
+    document.getElementById('galleryScreen').style.display = 'none';
+  }
+
+  function handleFiles(files){
+    for(var i = 0; i < files.length; i++){
+      photos.push({ url: URL.createObjectURL(files[i]), name: files[i].name });
+    }
+    updateCount();
+    document.getElementById('btnShowStrip').style.display = 'inline-block';
+  }
+
+  function addMoreFiles(files){
+    for(var i = 0; i < files.length; i++){
+      var p = { url: URL.createObjectURL(files[i]), name: files[i].name };
+      photos.push(p);
+      addFrameToStrip(p);
+    }
+    updateCount();
+  }
+
+  function updateCount(){
+    document.getElementById('uploadCount').textContent = photos.length + ' fotoğraf seçildi';
+  }
+
+  function buildStrip(){
+    var strip = document.getElementById('filmStrip');
+    strip.innerHTML = '';
+    photos.forEach(function(p){ addFrameToStrip(p); });
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('btnShowStrip').style.display = 'none';
+    document.getElementById('filmStripWrap').style.display = 'block';
+    document.getElementById('galleryControls').style.display = 'flex';
+    document.getElementById('stripActions').style.display = 'flex';
+    initDrag();
+  }
+
+  function addFrameToStrip(p){
+    var strip = document.getElementById('filmStrip');
+    var frame = document.createElement('div'); frame.className = 'film-frame';
+    var holes = '';
+    for(var i = 0; i < 5; i++) holes += '<div class="film-hole"></div>';
+    var holeRow = '<div class="film-holes">' + holes + '</div>';
+    var cap = p.name.replace(/\.[^/.]+$/, '').substring(0, 22);
+    frame.innerHTML = holeRow + '<img class="film-img" src="' + p.url + '" alt="anı">' + holeRow + '<div class="film-caption">' + cap + '</div>';
+    strip.appendChild(frame);
+  }
+
+  function scrollStrip(dir){
+    document.getElementById('filmStrip').scrollBy({ left: dir * 220, behavior: 'smooth' });
+  }
+
+  function initDrag(){
+    var s = document.getElementById('filmStrip'), isDown = false, startX, scrollLeft;
+    s.addEventListener('mousedown', function(e){ isDown = true; s.classList.add('grabbing'); startX = e.pageX - s.offsetLeft; scrollLeft = s.scrollLeft; });
+    s.addEventListener('mouseleave', function(){ isDown = false; s.classList.remove('grabbing'); });
+    s.addEventListener('mouseup', function(){ isDown = false; s.classList.remove('grabbing'); });
+    s.addEventListener('mousemove', function(e){ if(!isDown) return; e.preventDefault(); s.scrollLeft = scrollLeft - (e.pageX - s.offsetLeft - startX) * 1.2; });
+    s.addEventListener('touchstart', function(e){ startX = e.touches[0].pageX; scrollLeft = s.scrollLeft; }, { passive: true });
+    s.addEventListener('touchmove', function(e){ s.scrollLeft = scrollLeft - (e.touches[0].pageX - startX) * 1.2; }, { passive: true });
+  }
+
+  // Drag & drop
+  var uz = document.getElementById('uploadZone');
+  uz.addEventListener('dragover', function(e){ e.preventDefault(); uz.classList.add('drag-over'); });
+  uz.addEventListener('dragleave', function(){ uz.classList.remove('drag-over'); });
+  uz.addEventListener('drop', function(e){ e.preventDefault(); uz.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+  function launchConfetti(){
+    var c = document.getElementById('confetti'), syms = ['❤️','💕','💗','💖','💝','🌹','✨'];
+    for(var i = 0; i < 40; i++){
+      (function(i){ setTimeout(function(){
+        var el = document.createElement('div'); el.className = 'conf-heart';
+        el.textContent = syms[Math.floor(Math.random() * syms.length)];
+        el.style.left = (Math.random() * 100) + 'vw';
+        el.style.animationDuration = (1 + Math.random()) + 's';
+        el.style.fontSize = (16 + Math.random() * 24) + 'px';
+        c.appendChild(el);
+        setTimeout(function(){ el.remove(); }, 3000);
+      }, i * 60); })(i);
+    }
+  }
+</script>
+</body>
+</html>
