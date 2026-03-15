@@ -77,6 +77,37 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .confetti-hearts{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;}
 .conf-heart{position:absolute;top:-40px;animation:confFall linear forwards;}
 @keyframes confFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+/* OYUN STİLLERİ */
+#gameScreen{background:linear-gradient(160deg,#1a0010,#200015,#1a0010);}
+.game-wrapper{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:420px;}
+.game-header{display:flex;justify-content:space-between;align-items:center;width:100%;padding:0 4px;}
+.game-title{font-family:'Dancing Script',cursive;font-size:26px;color:var(--blush);text-shadow:0 0 20px rgba(255,100,130,.5);}
+.game-score-wrap{font-family:'Lato',sans-serif;font-size:14px;color:rgba(255,200,210,.6);letter-spacing:1px;}
+.game-score-val{font-size:22px;font-weight:700;color:var(--blush);margin-left:6px;}
+.game-arena{position:relative;width:100%;max-width:420px;height:480px;border:1px solid rgba(255,100,130,.2);border-radius:20px;overflow:hidden;background:rgba(0,0,0,.3);}
+#gameCanvas{display:block;width:100%;height:100%;}
+.game-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,0,8,.7);backdrop-filter:blur(6px);}
+.game-over-box{text-align:center;padding:30px 40px;}
+.game-over-title{font-size:52px;animation:pulse 1.2s ease infinite;}
+.game-over-msg{font-family:'Dancing Script',cursive;font-size:24px;color:var(--blush);margin:8px 0;}
+.game-over-score{font-family:'Lato',sans-serif;font-size:14px;color:rgba(255,200,210,.6);letter-spacing:2px;margin-bottom:4px;}
+.game-lives{font-size:22px;letter-spacing:6px;color:#ff4d6d;}
+.polaroid{cursor:pointer;}
+/* SENİ SEVİYORUM ÇÜNKÜ */
+#reasonsScreen{background:linear-gradient(160deg,#1a0010,#250018,#1a0010);}
+.reasons-wrap{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;}
+.reasons-top{display:flex;flex-direction:column;align-items:center;gap:24px;width:100%;}
+.reasons-label{font-family:'Dancing Script',cursive;font-size:22px;color:rgba(255,180,200,.6);letter-spacing:1px;text-align:center;}
+.reasons-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,100,130,.2);border-radius:28px;padding:40px 32px;width:100%;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;backdrop-filter:blur(14px);box-shadow:0 8px 40px rgba(220,50,80,.12);transition:transform .3s;}
+.reasons-card.flip{animation:cardFlip .5s cubic-bezier(.4,0,.2,1);}
+@keyframes cardFlip{0%{transform:scale(1);}30%{transform:scale(.92) rotateY(8deg);opacity:.6;}70%{transform:scale(.95) rotateY(-4deg);opacity:.8;}100%{transform:scale(1) rotateY(0);opacity:1;}}
+.reasons-rose{font-size:44px;animation:roseFloat 3s ease-in-out infinite;}
+@keyframes roseFloat{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-8px) rotate(5deg);}}
+.reasons-text{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:rgba(255,230,235,.92);line-height:1.7;text-align:center;min-height:60px;}
+.reasons-btn{background:linear-gradient(135deg,#dc3253,#a01040);border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:14px;letter-spacing:2px;padding:14px 38px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.45);transition:transform .15s,box-shadow .15s;margin-top:4px;}
+.reasons-btn:hover{transform:scale(1.06);box-shadow:0 6px 28px rgba(220,50,80,.65);}
+.reasons-btn:active{transform:scale(.97);}
+.reasons-counter{font-family:'Lato',sans-serif;font-size:11px;color:rgba(255,180,200,.35);letter-spacing:3px;}
 </style>
 </head>
 <body>
@@ -118,6 +149,8 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px;">
       <button class="btn-gallery" onclick="goGallery()">&#127902;&#65039; &nbsp;Foto&#287;raflar&#305;m&#305;z</button>
       <button class="btn-poem" onclick="goPoem()">&#128214; &nbsp;Sana Bir &#350;iir</button>
+      <button class="btn-poem" onclick="goGame()" style="color:rgba(255,200,210,.9);">&#127918; &nbsp;Oyun Oyna</button>
+      <button class="btn-poem" onclick="goReasons()" style="color:rgba(255,200,210,.9);">&#127801; &nbsp;Seni Seviyorum &#199;&#252;nk&#252;...</button>
     </div>
   </div>
 </div>
@@ -153,6 +186,56 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     <div class="poem-author">Naz&#305;m Hikmet</div>
     <div class="poem-title">Seni Seviyorum</div>
     <div class="poem-body" id="poemBody"></div>
+  </div>
+  <button class="btn-back" style="margin-top:24px;" onclick="goBack('successScreen')">&#8592; Geri D&#246;n</button>
+</div>
+
+<!-- EKRAN 5: OYUN -->
+<div class="screen" id="gameScreen">
+  <div class="game-wrapper">
+    <div class="game-header">
+      <div class="game-title">&#10084; Kalp Yakala</div>
+      <div class="game-score-wrap">
+        <span class="game-score-label">Puan:</span>
+        <span class="game-score-val" id="gameScore">0</span>
+      </div>
+    </div>
+    <div class="game-arena" id="gameArena">
+      <canvas id="gameCanvas"></canvas>
+      <div class="game-overlay" id="gameOverlay">
+        <div class="game-over-box" id="gameOverBox">
+          <div class="game-over-title">&#10084;</div>
+          <div class="game-over-msg" id="gameOverMsg">Sevgini test et!</div>
+          <div class="game-over-score" id="gameOverScore"></div>
+          <button class="btn-gallery" onclick="startGame()" style="margin-top:16px;">&#9654; Oyna</button>
+        </div>
+      </div>
+    </div>
+    <div class="game-lives" id="gameLives">&#10084;&#10084;&#10084;</div>
+  </div>
+  <button class="btn-back" style="margin-top:18px;" onclick="stopGame();goBack('successScreen')">&#8592; Geri D&#246;n</button>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);z-index:9999;display:none;align-items:center;justify-content:center;cursor:pointer;">
+  <img id="lightboxImg" src="" style="max-width:92vw;max-height:90vh;border-radius:12px;box-shadow:0 8px 40px rgba(255,100,130,.4);object-fit:contain;" />
+  <div style="position:absolute;top:18px;right:24px;color:#fff;font-size:28px;cursor:pointer;" onclick="closeLightbox()">&#10005;</div>
+</div>
+
+<!-- EKRAN 6: SENİ SEVİYORUM ÇÜNKÜ -->
+<div class="screen" id="reasonsScreen">
+  <div class="reasons-wrap">
+    <div class="reasons-top">
+      <div class="reasons-label">Seni seviyorum &#231;&#252;nk&#252;...</div>
+      <div class="reasons-card" id="reasonCard">
+        <div class="reasons-rose">&#127801;</div>
+        <div class="reasons-text" id="reasonText"></div>
+      </div>
+      <button class="reasons-btn" id="reasonsBtn" onclick="showNextReason()">
+        <span id="reasonsBtnText">Ke&#351;fet &#10084;</span>
+      </button>
+      <div class="reasons-counter" id="reasonsCounter"></div>
+    </div>
   </div>
   <button class="btn-back" style="margin-top:24px;" onclick="goBack('successScreen')">&#8592; Geri D&#246;n</button>
 </div>
@@ -282,8 +365,10 @@ function startCounter(){
 }
 
 function goScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
-function goGallery(){goScreen('galleryScreen');setTimeout(initDrag,100);}
+function goGallery(){goScreen('galleryScreen');setTimeout(initDrag,100);setTimeout(initLightbox,200);}
 function goPoem(){goScreen('poemScreen');renderPoem();}
+function goGame(){goScreen('gameScreen');}
+function goReasons(){goScreen('reasonsScreen');initReasons();}
 function goBack(id){goScreen(id);}
 
 function scrollPolaroid(dir){document.getElementById('polaroidTrack').scrollBy({left:dir*240,behavior:'smooth'});}
@@ -356,6 +441,344 @@ function launchConfetti(){
       c.appendChild(el);setTimeout(function(){el.remove();},3000);
     },idx*50);})(i);
   }
+}
+
+/* ===== LIGHTBOX ===== */
+function initLightbox(){
+  document.querySelectorAll('.polaroid img').forEach(function(img){
+    img.onclick=function(e){
+      e.stopPropagation();
+      openLightbox(img.src);
+    };
+  });
+}
+function openLightbox(src){
+  var lb=document.getElementById('lightbox');
+  document.getElementById('lightboxImg').src=src;
+  lb.style.display='flex';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').style.display='none';
+}
+
+/* ===== KALP YAKALAMA OYUNU ===== */
+var gameRunning=false,gameLives=3,gameScoreVal=0,gameLoop=null,gameHearts=[];
+var gameCanvas,gameCtx,gameW,gameH,gameBucket;
+var gameDifficulty=1,gameFrameCount=0;
+
+function startGame(){
+  gameCanvas=document.getElementById('gameCanvas');
+  var arena=document.getElementById('gameArena');
+  gameW=arena.clientWidth;gameH=arena.clientHeight;
+  gameCanvas.width=gameW;gameCanvas.height=gameH;
+  gameCtx=gameCanvas.getContext('2d');
+  gameLives=3;gameScoreVal=0;gameHearts=[];gameDifficulty=1;gameFrameCount=0;
+  gameBucket={x:gameW/2-35,y:gameH-55,w:70,h:38};
+  document.getElementById('gameScore').textContent='0';
+  document.getElementById('gameOverlay').style.display='none';
+  document.getElementById('gameLives').innerHTML='&#10084;&#10084;&#10084;';
+  gameRunning=true;
+  gameCanvas.onmousemove=function(e){
+    var r=gameCanvas.getBoundingClientRect();
+    gameBucket.x=Math.max(0,Math.min(gameW-gameBucket.w,(e.clientX-r.left)-gameBucket.w/2));
+  };
+  gameCanvas.ontouchmove=function(e){
+    e.preventDefault();
+    var r=gameCanvas.getBoundingClientRect();
+    gameBucket.x=Math.max(0,Math.min(gameW-gameBucket.w,(e.touches[0].clientX-r.left)-gameBucket.w/2));
+  };
+  cancelAnimationFrame(gameLoop);
+  gameLoopFn();
+}
+function gameLoopFn(){
+  if(!gameRunning)return;
+  gameFrameCount++;
+  gameDifficulty=1+Math.floor(gameScoreVal/10)*0.15;
+  // spawn
+  var spawnRate=Math.max(30,60-gameScoreVal*2);
+  if(gameFrameCount%Math.round(spawnRate)===0){
+    var isBomb=gameScoreVal>5&&Math.random()<0.18;
+    gameHearts.push({
+      x:30+Math.random()*(gameW-60),y:-30,
+      vy:1.5+Math.random()*1.5*gameDifficulty,
+      sym:isBomb?'💣':'❤',
+      isBomb:isBomb,
+      size:isBomb?22:20+Math.random()*12,
+      alpha:1,hit:false
+    });
+  }
+  gameCtx.clearRect(0,0,gameW,gameH);
+  // draw bg particles
+  gameCtx.save();
+  gameCtx.fillStyle='rgba(255,100,130,0.025)';
+  for(var p=0;p<3;p++){
+    gameCtx.beginPath();
+    gameCtx.arc(Math.random()*gameW,Math.random()*gameH,1,0,Math.PI*2);
+    gameCtx.fill();
+  }
+  gameCtx.restore();
+  // update hearts
+  for(var i=gameHearts.length-1;i>=0;i--){
+    var h=gameHearts[i];
+    h.y+=h.vy;
+    if(!h.hit){
+      // check catch
+      if(h.y+h.size/2>gameBucket.y&&h.y-h.size/2<gameBucket.y+gameBucket.h&&
+         h.x>gameBucket.x&&h.x<gameBucket.x+gameBucket.w){
+        h.hit=true;
+        if(h.isBomb){
+          gameLives--;
+          updateLivesDisplay();
+          if(gameLives<=0){endGame();return;}
+        } else {
+          gameScoreVal++;
+          document.getElementById('gameScore').textContent=gameScoreVal;
+          spawnCatchEffect(h.x,h.y);
+        }
+        gameHearts.splice(i,1);continue;
+      }
+      // missed
+      if(h.y>gameH+10){
+        if(!h.isBomb){
+          gameLives--;
+          updateLivesDisplay();
+          if(gameLives<=0){endGame();return;}
+        }
+        gameHearts.splice(i,1);continue;
+      }
+    }
+    // draw heart/bomb
+    gameCtx.save();
+    gameCtx.globalAlpha=h.alpha;
+    gameCtx.font=h.size+'px serif';
+    gameCtx.textAlign='center';
+    gameCtx.shadowColor='rgba(255,80,120,.7)';
+    gameCtx.shadowBlur=h.isBomb?0:10;
+    gameCtx.fillText(h.sym,h.x,h.y);
+    gameCtx.restore();
+  }
+  // draw bucket
+  drawBucket();
+  gameLoop=requestAnimationFrame(gameLoopFn);
+}
+var catchEffects=[];
+function spawnCatchEffect(x,y){
+  catchEffects.push({x:x,y:y,t:0});
+}
+function drawBucket(){
+  var b=gameBucket;
+  // bucket body
+  gameCtx.save();
+  var grad=gameCtx.createLinearGradient(b.x,b.y,b.x,b.y+b.h);
+  grad.addColorStop(0,'rgba(255,80,120,.55)');
+  grad.addColorStop(1,'rgba(180,20,70,.45)');
+  gameCtx.fillStyle=grad;
+  gameCtx.strokeStyle='rgba(255,120,150,.7)';
+  gameCtx.lineWidth=2;
+  gameCtx.beginPath();
+  gameCtx.roundRect(b.x,b.y,b.w,b.h,10);
+  gameCtx.fill();gameCtx.stroke();
+  // heart icon on bucket
+  gameCtx.font='18px serif';
+  gameCtx.textAlign='center';
+  gameCtx.fillText('❤',b.x+b.w/2,b.y+b.h-8);
+  // catch effects
+  for(var i=catchEffects.length-1;i>=0;i--){
+    var ef=catchEffects[i];
+    ef.t+=0.08;
+    gameCtx.save();
+    gameCtx.globalAlpha=Math.max(0,1-ef.t);
+    gameCtx.font=Math.round(16+ef.t*20)+'px serif';
+    gameCtx.textAlign='center';
+    gameCtx.fillStyle='rgba(255,200,210,1)';
+    gameCtx.fillText('+1',ef.x,ef.y-ef.t*40);
+    gameCtx.restore();
+    if(ef.t>=1)catchEffects.splice(i,1);
+  }
+  gameCtx.restore();
+}
+function updateLivesDisplay(){
+  var s='';
+  for(var i=0;i<3;i++) s+=(i<gameLives)?'&#10084;':'&#9825;';
+  document.getElementById('gameLives').innerHTML=s;
+}
+function endGame(){
+  gameRunning=false;
+  cancelAnimationFrame(gameLoop);
+  var overlay=document.getElementById('gameOverlay');
+  var msgs=['Harika! Ne kadar seviyorsun! 💖','Bravo canım! 🌹','Kalbim senin! ❤️','Müthişsin! ✨','Çok iyi! Sevgin büyük 💗'];
+  var lostMsgs=['Üzülme, hep seviyorum 💔','Tekrar dene tatlım 🌷','Kalpler kaçtı ama sen değil ❤'];
+  var msg=gameScoreVal>=15?msgs[Math.floor(Math.random()*msgs.length)]:lostMsgs[Math.floor(Math.random()*lostMsgs.length)];
+  document.getElementById('gameOverMsg').textContent=msg;
+  document.getElementById('gameOverScore').textContent='Puan: '+gameScoreVal;
+  document.getElementById('gameOverBox').querySelector('.game-over-title').textContent=gameScoreVal>=15?'🏆':'💔';
+  overlay.style.display='flex';
+}
+function stopGame(){
+  gameRunning=false;
+  cancelAnimationFrame(gameLoop);
+}
+
+/* ===== SENİ SEVİYORUM ÇÜNKÜ ===== */
+var reasons = [
+  "gülüşün odayı aydınlatıyor",
+  "yanımda hissettirdiğin güven hiç bitmiyor",
+  "saçlarının kokusu aklımdan gitmiyor",
+  "bana baktığında kalbim hızlanıyor",
+  "güldüğünde tüm dünya güzel görünüyor",
+  "seninle geçen her saniye değerli",
+  "ellerini tuttuğumda eve döndüğümü hissediyorum",
+  "seninle olmak beni daha iyi biri yapıyor",
+  "gözlerin her şeyi anlatıyor",
+  "sabahları gördüğüm ilk şeyin sen olmasını istiyorum",
+  "kötü günlerimde bile gülümsememi sağlıyorsun",
+  "seninle olmak en doğal his",
+  "masum bakışlarına bayılıyorum",
+  "seninle konuşmak hiç bitmesini istemiyorum",
+  "güçlü olduğumu hissettiriyorsun",
+  "varlığın bana yeterli",
+  "seni düşününce içim ısınıyor",
+  "seninle her an hatıra oluyor",
+  "sesini duymak güzel bir şey",
+  "küçük şeyleri büyük yapıyorsun",
+  "benimle sabırlı oluyorsun",
+  "saf ve temiz bir kalbin var",
+  "benim için endişeleniyorsun",
+  "sevinçlerin benim sevinçlerim oluyor",
+  "üzüldüğünde seni korumak istiyorum",
+  "yanındayken zaman uçup gidiyor",
+  "her şeyi seninle paylaşmak istiyorum",
+  "bakışların kelimelerden çok şey anlatıyor",
+  "sarıldığında dünyanın geri kalanı önemini yitiriyor",
+  "sen olmadan önceki hayatımı hatırlamıyorum",
+  "seninle güvende hissediyorum",
+  "neşen bulaşıcı",
+  "küçük şeylerle mutlu olabiliyorsun",
+  "dürüstsün ve bu çok değerli",
+  "seninle olmak beni tamamlıyor",
+  "seni dinlemek hiç sıkıcı olmuyor",
+  "aklıma her zaman sen geliyorsun",
+  "seninle vakit geçirmek hiç yetmiyor",
+  "yanımda olduğunda her şey daha kolay",
+  "sevgin gerçek ve bunu hissediyorum",
+  "beni olduğum gibi kabul ediyorsun",
+  "seninle her yer güzel",
+  "gülüşün ilaç gibi",
+  "hayatıma renk katıyorsun",
+  "seninle olmak beni heyecanlandırıyor",
+  "kalbim seni seçiyor, her gün yeniden",
+  "seninle zaman geçirmek en büyük ödülüm",
+  "seninle konuşurken saatler dakika gibi geçiyor",
+  "iyi kalpli birisin",
+  "seninle olmak beni mutlu ediyor",
+  "seni her gördüğümde yeniden aşık oluyorum",
+  "benim için özen gösteriyorsun",
+  "varlığınla hayatım daha anlamlı",
+  "seninle her şey daha güzel görünüyor",
+  "sesinde bir sıcaklık var",
+  "beni anlıyorsun",
+  "seninle olmak harika bir his",
+  "düşünceli ve özenli birisin",
+  "seninle olmak bana güç veriyor",
+  "seni düşününce yüzüm gülüyor",
+  "gülüşün hafızama kazındı",
+  "seninle olmak beni dinlendiriyor",
+  "güzel bir insan olduğunu biliyorum",
+  "seninle vakit geçirmek istiyorum, her zaman",
+  "seni görünce içim açılıyor",
+  "benim için önemlisin, çok",
+  "seninle olan her an kıymetli",
+  "seni sevmek kolay ve doğal geliyor",
+  "gözlerinin içindeki sıcaklık beni eritiyor",
+  "seninle her yer yurt oluyor",
+  "kalbim seninle huzurlu",
+  "beni olduğum gibi seviyorsun",
+  "seninle olmak istiyorum, sabah akşam",
+  "seninle hayaller kurmak güzel",
+  "seni özlüyorum, hep",
+  "seninle olmak en güzel şey",
+  "hayatımın en güzel kararı seni sevmek",
+  "seninle olmak bana yetiyorsun",
+  "seni sevmek kolay",
+  "her gün seni daha çok seviyorum",
+  "seninle olan her şey anlamlı",
+  "sen benim favorim",
+  "seninle güldüğümde dünyanın en mutlu insanı oluyorum",
+  "seni sevmek içgüdüsel",
+  "seninle olan her an kalbe işleniyor",
+  "seni her düşündüğümde gülümsüyorum",
+  "seninle olmak beni en iyi hissettiriyor",
+  "sen varsın diye hayat güzel",
+  "seninle olmak istiyorum, her zaman, her koşulda",
+  "seni seviyorum, sadece seni",
+  "seninle olmak yeterliyim, sana yeterliyim",
+  "sen benim her şeyimsin",
+  "seninle olmak istiyorum, bugün, yarın, hep",
+  "seninle her yeni güne uyanmak istiyorum",
+  "seninle yaşlanmak istiyorum",
+  "seni seviyorum Yüsra, çünkü sen sensin ❤️"
+];
+
+var currentReasonIdx = -1;
+var reasonsInitialized = false;
+
+function initReasons(){
+  if(!reasonsInitialized){
+    reasonsInitialized = true;
+    document.getElementById('reasonText').textContent = '';
+    document.getElementById('reasonsCounter').textContent = '';
+    document.getElementById('reasonsBtnText').textContent = 'Keşfet ❤';
+  }
+}
+
+function showNextReason(){
+  currentReasonIdx++;
+  if(currentReasonIdx >= reasons.length) currentReasonIdx = 0;
+
+  var card = document.getElementById('reasonCard');
+  var textEl = document.getElementById('reasonText');
+  var counter = document.getElementById('reasonsCounter');
+  var btnText = document.getElementById('reasonsBtnText');
+
+  // Kart flip animasyonu
+  card.classList.remove('flip');
+  void card.offsetWidth;
+  card.classList.add('flip');
+
+  // Metin fade+slide animasyonla
+  textEl.style.transition = 'none';
+  textEl.style.opacity = '0';
+  textEl.style.transform = 'translateY(12px)';
+
+  setTimeout(function(){
+    textEl.textContent = reasons[currentReasonIdx];
+    textEl.style.transition = 'opacity .4s ease, transform .4s ease';
+    textEl.style.opacity = '1';
+    textEl.style.transform = 'translateY(0)';
+  }, 220);
+
+  counter.textContent = (currentReasonIdx + 1) + ' / ' + reasons.length;
+
+  if(currentReasonIdx === reasons.length - 1){
+    btnText.textContent = 'Baştan başla 🌹';
+  } else {
+    btnText.textContent = 'Sonraki ❤';
+  }
+
+  spawnReasonHeart();
+}
+
+function spawnReasonHeart(){
+  var c = document.getElementById('confetti');
+  var el = document.createElement('div');
+  el.className = 'conf-heart';
+  el.textContent = ['❤','🌹','✨','💕','🌸'][Math.floor(Math.random()*5)];
+  el.style.left = (20 + Math.random()*60) + 'vw';
+  el.style.animationDuration = (1.5 + Math.random()*.5) + 's';
+  el.style.fontSize = (16 + Math.random()*14) + 'px';
+  el.style.color = ['#ff4d6d','#ff6b8a','#ffb3c1','#ff85a1'][Math.floor(Math.random()*4)];
+  c.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 3000);
 }
 
 </script>
