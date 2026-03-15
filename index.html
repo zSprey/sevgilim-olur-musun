@@ -84,9 +84,9 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 <canvas id="starCanvas"></canvas>
 <div class="confetti-hearts" id="confetti"></div>
 <button id="musicBtn" onclick="toggleMusic()">&#9835;</button>
-<audio id="bgMusic" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
+<div id="ytContainer" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none;">
+  <div id="ytPlayer"></div>
+</div>
 
 <!-- EKRAN 1: SORU -->
 <div class="screen active" id="askScreen">
@@ -201,13 +201,32 @@ function shootingStar(){
 setTimeout(shootingStar,2000);
 
 var isPlaying=false;
-var music=document.getElementById('bgMusic');
-function tryAutoPlay(){music.play().then(function(){isPlaying=true;document.getElementById('musicBtn').textContent='\u266A';document.getElementById('musicBtn').classList.add('playing');}).catch(function(){});}
+var ytPlayer=null;
+var ytReady=false;
+var tag=document.createElement('script');
+tag.src='https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
+function onYouTubeIframeAPIReady(){
+  ytPlayer=new YT.Player('ytPlayer',{
+    height:'1',width:'1',
+    videoId:'izGwDsrQ1eQ',
+    playerVars:{autoplay:0,loop:1,playlist:'izGwDsrQ1eQ',controls:0,disablekb:1,fs:0,iv_load_policy:3,modestbranding:1,rel:0},
+    events:{
+      onReady:function(){ytReady=true;},
+      onStateChange:function(e){
+        if(e.data===1){isPlaying=true;document.getElementById('musicBtn').textContent='\u266A';document.getElementById('musicBtn').classList.add('playing');}
+        else if(e.data===2||e.data===0){isPlaying=false;document.getElementById('musicBtn').textContent='\u266B';document.getElementById('musicBtn').classList.remove('playing');}
+      }
+    }
+  });
+}
+function tryAutoPlay(){if(ytReady&&ytPlayer){ytPlayer.playVideo();}}
 document.addEventListener('click',function(){if(!isPlaying)tryAutoPlay();},{once:true});
 function toggleMusic(){
+  if(!ytReady||!ytPlayer)return;
   var btn=document.getElementById('musicBtn');
-  if(isPlaying){music.pause();btn.textContent='\u266B';btn.classList.remove('playing');isPlaying=false;}
-  else{music.play().catch(function(){});btn.textContent='\u266A';btn.classList.add('playing');isPlaying=true;}
+  if(isPlaying){ytPlayer.pauseVideo();btn.textContent='\u266B';btn.classList.remove('playing');isPlaying=false;}
+  else{ytPlayer.playVideo();btn.textContent='\u266A';btn.classList.add('playing');isPlaying=true;}
 }
 
 var noCount=0;
@@ -242,7 +261,7 @@ function sayYes(){
   launchConfetti();
   goScreen('successScreen');
   startCounter();
-  music.play().catch(function(){});
+  if(ytReady&&ytPlayer){ytPlayer.playVideo();}
   document.getElementById('musicBtn').textContent='\u266A';
   document.getElementById('musicBtn').classList.add('playing');
   isPlaying=true;
