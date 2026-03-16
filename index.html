@@ -1903,8 +1903,8 @@ var calMonth = 0; // 0-indexed, default Ocak 2026
 // Özel günlerin takvimdeki eşleşmesi
 var CAL_EVENTS = [
   { month:12, day:13, type:'anniv',    label:'💑 Yıl Dönümü',        color:'#e8334a' },
-  { month:3,  day:10, type:'birthday', label:'🎂 Yüsra'nın Doğum Günü', color:'#ffb3c1' },
-  { month:12, day:29, type:'birthday', label:'🎂 Yunus'un Doğum Günü',  color:'#ffb3c1' },
+  { month:3,  day:10, type:'birthday', label:'🎂 Yüsra\u2019nın Doğum Günü', color:'#ffb3c1' },
+  { month:12, day:29, type:'birthday', label:'🎂 Yunus\u2019un Doğum Günü',  color:'#ffb3c1' },
   { month:12, day:13, type:'special',  label:'🌹 İlk Buluşma',         color:'#ffd700' },
 ];
 
@@ -1976,8 +1976,7 @@ function renderCalendar(){
       cell.appendChild(dot);
 
       // Tooltip on hover
-      var tooltipText = events.map(function(ev){ return ev.label; }).join('
-');
+      var tooltipText = events.map(function(ev){ return ev.label; }).join('\n');
       cell.addEventListener('mouseenter', function(e){
         var t = document.getElementById('calTooltip');
         t.style.display = 'block';
