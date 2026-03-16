@@ -243,6 +243,45 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .btn-share-card:hover{background:rgba(255,80,100,.12);color:var(--blush);}
 
 </style>
+  <!-- Firebase SDK -->
+  <script type="module">
+    // ═══════════════════════════════════════════════
+    // FIREBASE YAPILANDIRMASI — buraya kendi değerlerini gir
+    // ═══════════════════════════════════════════════
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    import { getStorage, ref as sRef, uploadString, getDownloadURL, deleteObject, listAll } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyCzX7dEzoedp73IH73FYjmNfXt-gQuAIlU",
+      authDomain:        "sevgilim-55a56.firebaseapp.com",
+      databaseURL:       "https://sevgilim-55a56-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId:         "sevgilim-55a56",
+      storageBucket:     "sevgilim-55a56.firebasestorage.app",
+      messagingSenderId: "62336658880",
+      appId:             "1:62336658880:web:66cf997a8338367d33ac25"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+    const storage = getStorage(app);
+
+    // Global olarak eriş
+    window._firebaseDb      = db;
+    window._firebaseStorage = storage;
+    window._firebaseRef     = ref;
+    window._firebaseSRef    = sRef;
+    window._firebaseSet     = set;
+    window._firebaseGet     = get;
+    window._firebaseOnValue = onValue;
+    window._firebaseGetDownloadURL = getDownloadURL;
+    window._firebaseUploadString   = uploadString;
+    window._firebaseDeleteObject   = deleteObject;
+    window._firebaseListAll        = listAll;
+    window._firebaseReady = true;
+    window.dispatchEvent(new Event('firebaseReady'));
+    console.log('✓ Firebase hazır');
+  </script>
 </head>
 <body>
 
@@ -411,15 +450,8 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     <div class="admin-success" id="adminSuccess"></div>
     <button class="admin-save-btn" id="adminSaveBtn" onclick="savePhotos()" disabled>Galeriye Ekle 💾</button>
 
-    <!-- Sync kodu - diğer cihazlardan yükle -->
-    <div id="syncCodeWrap" style="display:none;margin-bottom:14px;"></div>
-    <div class="admin-section-title" style="margin-top:4px;">Diğer Cihazdan Senkronize Et</div>
-    <div class="location-row" style="margin-bottom:16px;">
-      <div class="field-wrap">
-        <input class="field-input" type="text" id="syncCodeInput" placeholder="Sync kodunu gir..." />
-      </div>
-      <button class="btn-gps" onclick="applySyncCode()" title="Senkronize et" style="font-size:13px;padding:9px 12px;">Sync</button>
-    </div>
+    <!-- Firebase durum göstergesi -->
+    <div id="fbStatusWrap" style="margin-bottom:12px;font-size:11px;text-align:center;color:rgba(255,200,200,.35);letter-spacing:1px;"></div>
 
     <div class="admin-section-title">Eklenen Fotoğraflar</div>
     <div class="admin-gallery-list" id="adminGalleryList"></div>
@@ -1060,15 +1092,19 @@ function checkAdminPass(){
     document.getElementById('adminSuccess').textContent = '';
     document.getElementById('adminSaveBtn').disabled = true;
     goScreen('adminScreen');
-    // Mevcut sync kodu varsa göster
-    var existingBin = getSharedBinId();
-    if(existingBin) showSyncCode(existingBin);
-    // Uzaktan senkronize et ve listeyi güncelle
-    document.getElementById('adminSuccess').textContent = '⏳ Fotoğraflar senkronize ediliyor...';
-    getStoredPhotosRemote(function(photos){
-      rebuildGalleryFromStorage();
+    // Firebase'den güncel listeyi çek
+    var fbStatus = document.getElementById('fbStatusWrap');
+    if(fbStatus){
+      if(window._firebaseReady){
+        fbStatus.textContent = '✓ Firebase bağlı — fotoğraflar herkeste görünür';
+        fbStatus.style.color = 'rgba(100,255,150,.5)';
+      } else {
+        fbStatus.textContent = '⚠ Firebase yapılandırılmamış — fotoğraflar sadece bu cihazda';
+        fbStatus.style.color = 'rgba(255,180,80,.5)';
+      }
+    }
+    getStoredPhotosRemote(function(){
       renderAdminGalleryList();
-      document.getElementById('adminSuccess').textContent = '';
     });
   } else {
     document.getElementById('adminErr').textContent = 'Şifre yanlış 💔';
@@ -1114,7 +1150,7 @@ function renderUploadForms(){
     var header = document.createElement('div');
     header.className = 'pending-photo-header';
     var img = document.createElement('img');
-    img.src = p.dataUrl;
+    img.src = p.url || p.dataUrl;
     var info = document.createElement('div');
     info.className = 'pending-photo-header-info';
     info.textContent = 'Fotoğraf ' + (i+1);
@@ -1263,120 +1299,174 @@ function renderUploadForms(){
   document.getElementById('adminSaveBtn').disabled = false;
 }
 
-/* ===== KALICI DEPOLAMA (JSONBin.io public) ===== */
-// İlk admin fotoğraf kaydettiğinde otomatik public bin oluşturulur.
-// Bin ID localStorage'a kaydedilir VE admin panelinde gösterilir.
-// Yüsra başka cihazdan açarsa: admin panelinde "Sync Kodu" girer → o bin'den yükler.
+/* ===== FOTOĞRAF DEPOLAMA — FİREBASE ===== */
+// Fotoğraflar Firebase Storage'a yüklenir, metadata Realtime DB'de saklanır.
+// Kim açarsa açsın, her cihazda otomatik görünür — Yunus yükler, Yüsra görür.
 
 var _photoCache = null;
-var SHARED_BIN_STORAGE_KEY = 'sevgilim_bin_id';
 
-function getSharedBinId(){ return localStorage.getItem(SHARED_BIN_STORAGE_KEY) || null; }
-function setSharedBinId(id){ localStorage.setItem(SHARED_BIN_STORAGE_KEY, id); }
+function _fbReady(cb){
+  if(window._firebaseReady){ cb(); }
+  else { window.addEventListener('firebaseReady', cb, {once:true}); }
+}
 
 function getStoredPhotos(){
   return _photoCache || JSON.parse(localStorage.getItem('adminPhotos')||'[]');
 }
 
+// Sayfa yüklenince Firebase'den fotoğrafları çek
 function getStoredPhotosRemote(cb){
-  var binId = getSharedBinId();
-  if(!binId){
-    var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
-    _photoCache = local; cb(local); return;
-  }
-  fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',{
-    headers:{'X-Access-Key':'$2a$10$wECFAkDBCEFQ1GBzjl5FteB7dlRrIOcOmEWnVRm2OxnX6nqWAJpVe'}
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    var photos = (d.record && Array.isArray(d.record.photos)) ? d.record.photos : [];
-    _photoCache = photos;
-    localStorage.setItem('adminPhotos', JSON.stringify(photos));
-    cb(photos);
-  })
-  .catch(function(){
-    var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
-    _photoCache = local; cb(local);
+  _fbReady(function(){
+    var dbRef = window._firebaseRef(window._firebaseDb, 'photos');
+    window._firebaseGet(dbRef).then(function(snapshot){
+      var data = snapshot.val();
+      var photos = [];
+      if(data){
+        // Object → array, id'ye göre sırala
+        photos = Object.values(data).sort(function(a,b){ return (a.order||0)-(b.order||0); });
+      }
+      _photoCache = photos;
+      localStorage.setItem('adminPhotos', JSON.stringify(photos));
+      cb(photos);
+    }).catch(function(e){
+      console.warn('Firebase okuma hatası:', e);
+      var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
+      _photoCache = local; cb(local);
+    });
   });
 }
 
-function saveStoredPhotosRemote(arr, cb){
-  _photoCache = arr;
-  localStorage.setItem('adminPhotos', JSON.stringify(arr));
-  var binId = getSharedBinId();
-  var payload = JSON.stringify({photos: arr});
-  var headers = {'Content-Type':'application/json','X-Access-Key':'$2a$10$wECFAkDBCEFQ1GBzjl5FteB7dlRrIOcOmEWnVRm2OxnX6nqWAJpVe'};
-  if(binId){
-    fetch('https://api.jsonbin.io/v3/b/'+binId,{method:'PUT',headers:headers,body:payload})
-    .then(function(r){return r.json();})
-    .then(function(){ if(cb)cb(true); })
-    .catch(function(){ if(cb)cb(false); });
-  } else {
-    // Yeni public bin oluştur
-    var ch = Object.assign({},headers,{'X-Bin-Name':'sevgilim','X-Bin-Private':'false'});
-    fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:ch,body:payload})
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(d.metadata && d.metadata.id){
-        setSharedBinId(d.metadata.id);
-        showSyncCode(d.metadata.id);
-        if(cb)cb(true);
-      } else { if(cb)cb(false); }
-    })
-    .catch(function(){ if(cb)cb(false); });
-  }
+// Gerçek zamanlı dinle — Yüsra sayfayı açıkken Yunus fotoğraf eklese anında görünür
+function startRealtimeSync(){
+  _fbReady(function(){
+    var dbRef = window._firebaseRef(window._firebaseDb, 'photos');
+    window._firebaseOnValue(dbRef, function(snapshot){
+      var data = snapshot.val();
+      var photos = data ? Object.values(data).sort(function(a,b){ return (a.order||0)-(b.order||0); }) : [];
+      var currentIds = (_photoCache||[]).map(function(p){return p.fbKey;}).join(',');
+      var newIds = photos.map(function(p){return p.fbKey;}).join(',');
+      if(currentIds !== newIds){
+        _photoCache = photos;
+        localStorage.setItem('adminPhotos', JSON.stringify(photos));
+        rebuildGalleryFromStorage();
+        if(typeof refreshMemoryMap === 'function') refreshMemoryMap();
+      }
+    });
+  });
 }
 
 function saveStoredPhotos(arr){
   _photoCache = arr;
   localStorage.setItem('adminPhotos', JSON.stringify(arr));
-  saveStoredPhotosRemote(arr, null);
 }
 
-function showSyncCode(binId){
-  var el = document.getElementById('syncCodeWrap');
-  if(el){ el.innerHTML = '<div class="field-label" style="margin-bottom:4px;">Sync Kodu (diğer cihazlar için)</div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,150,150,.2);border-radius:9px;padding:8px 12px;font-size:13px;color:#ffd6de;letter-spacing:1px;word-break:break-all;">'+binId+'</div>'; el.style.display='block'; }
+// Tek fotoğrafı Firebase'e yükle (base64 → Storage, metadata → DB)
+function uploadPhotoToFirebase(photoObj, order, cb){
+  _fbReady(function(){
+    var fbKey = 'photo_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    var storageRef = window._firebaseSRef(window._firebaseStorage, 'photos/' + fbKey + '.jpg');
+
+    // base64 data url'den sadece data kısmını al
+    var dataUrl = photoObj.dataUrl;
+
+    window._firebaseUploadString(storageRef, dataUrl, 'data_url').then(function(){
+      return window._firebaseGetDownloadURL(storageRef);
+    }).then(function(downloadUrl){
+      var record = {
+        fbKey:        fbKey,
+        url:          downloadUrl,
+        date:         photoObj.date         || '',
+        locationName: photoObj.locationName || '',
+        lat:          photoObj.lat          || null,
+        lng:          photoObj.lng          || null,
+        order:        order
+      };
+      var dbRef = window._firebaseRef(window._firebaseDb, 'photos/' + fbKey);
+      return window._firebaseSet(dbRef, record).then(function(){ return record; });
+    }).then(function(record){
+      cb(null, record);
+    }).catch(function(e){
+      console.error('Yükleme hatası:', e);
+      cb(e, null);
+    });
+  });
 }
 
-function applySyncCode(){
-  var input = document.getElementById('syncCodeInput');
-  if(!input) return;
-  var code = input.value.trim();
-  if(!code) return;
-  setSharedBinId(code);
-  input.value = '';
-  var successEl = document.getElementById('adminSuccess');
-  successEl.textContent = '⏳ Fotoğraflar yükleniyor...';
-  getStoredPhotosRemote(function(photos){
-    rebuildGalleryFromStorage();
-    renderAdminGalleryList();
-    successEl.textContent = '✓ ' + photos.length + ' fotoğraf yüklendi!';
-    setTimeout(function(){successEl.textContent='';},3000);
+// Fotoğrafı Firebase'den sil
+function deletePhotoFromFirebase(photo, cb){
+  _fbReady(function(){
+    var key = photo.fbKey;
+    if(!key){ if(cb)cb(); return; }
+    var storageRef = window._firebaseSRef(window._firebaseStorage, 'photos/' + key + '.jpg');
+    var dbRef = window._firebaseRef(window._firebaseDb, 'photos/' + key);
+    window._firebaseDeleteObject(storageRef).catch(function(){})
+      .then(function(){ return window._firebaseSet(dbRef, null); })
+      .then(function(){ if(cb)cb(); })
+      .catch(function(){ if(cb)cb(); });
   });
 }
 
 function savePhotos(){
   if(!pendingPhotos.length) return;
-  var stored = getStoredPhotos();
-  pendingPhotos.forEach(function(p){
-    stored.push({ dataUrl: p.dataUrl, id: Date.now() + Math.random(), date: p.date, locationName: p.locationName, lat: p.lat, lng: p.lng });
-  });
   var btn = document.getElementById('adminSaveBtn');
   var successEl = document.getElementById('adminSuccess');
   btn.disabled = true;
-  btn.textContent = 'Kaydediliyor... ⏳';
   successEl.textContent = '';
-  saveStoredPhotosRemote(stored, function(ok){
-    _photoCache = stored;
-    localStorage.setItem('adminPhotos', JSON.stringify(stored));
-    addPhotosToGallery(pendingPhotos);
-    pendingPhotos = [];
-    renderUploadForms();
-    renderAdminGalleryList();
+
+  var toUpload = pendingPhotos.slice();
+  var currentOrder = getStoredPhotos().length;
+  var uploaded = 0;
+  var failed = 0;
+
+  function uploadNext(i){
+    if(i >= toUpload.length){
+      // Hepsi bitti
+      pendingPhotos = [];
+      renderUploadForms();
+      if(failed === 0){
+        successEl.textContent = '✓ ' + uploaded + ' fotoğraf yüklendi!';
+      } else {
+        successEl.textContent = uploaded + ' yüklendi, ' + failed + ' başarısız.';
+      }
+      setTimeout(function(){ successEl.textContent = ''; }, 4000);
+      return;
+    }
+
+    var p = toUpload[i];
+    btn.textContent = 'Yükleniyor ' + (i+1) + '/' + toUpload.length + ' ⏳';
+    successEl.textContent = (i+1) + '. fotoğraf yükleniyor...';
+
+    uploadPhotoToFirebase(p, currentOrder + i, function(err, record){
+      if(err){
+        failed++;
+      } else {
+        uploaded++;
+        // _photoCache'e ekle
+        var cache = getStoredPhotos().slice();
+        cache.push(record);
+        saveStoredPhotos(cache);
+        // Galeriye ekle (URL ile)
+        var galleryPhoto = {
+          dataUrl: record.url,
+          date: record.date,
+          locationName: record.locationName,
+          lat: record.lat,
+          lng: record.lng
+        };
+        addPhotosToGallery([galleryPhoto]);
+      }
+      uploadNext(i+1);
+    });
+  }
+
+  btn.textContent = 'Yükleniyor... ⏳';
+  uploadNext(0);
+
+  // Upload sonrası render
+  setTimeout(function(){
     btn.textContent = 'Galeriye Ekle 💾';
-    successEl.textContent = ok ? '✓ ' + stored.length + ' fotoğraf kaydedildi!' : '⚠ Yerel kaydedildi (internet yok)';
-    setTimeout(function(){ successEl.textContent = ''; }, 3500);
-  });
+    renderAdminGalleryList();
+  }, toUpload.length * 3000 + 1000);
 }
 
 function makePolaroidEl(photoObj){
@@ -1391,9 +1481,9 @@ function makePolaroidEl(photoObj){
   div.style.opacity = '1';
   div.style.transform = 'rotate('+rot+'deg) scale(0.9)';
   var img = document.createElement('img');
-  img.src = photoObj.dataUrl;
+  img.src = photoObj.url || photoObj.dataUrl;
   img.alt = 'Anı';
-  var src = photoObj.dataUrl;
+  var src = photoObj.url || photoObj.dataUrl;
   img.onclick = function(e){ e.stopPropagation(); openLightbox(src); };
   var shine = document.createElement('div');
   shine.className = 'polaroid-shine';
@@ -1441,25 +1531,25 @@ function renderAdminGalleryList(){
     var item = document.createElement('div');
     item.className = 'admin-gallery-item';
     var img = document.createElement('img');
-    img.src = p.dataUrl;
+    img.src = p.url || p.dataUrl;
     var info = document.createElement('div');
     info.className = 'admin-gallery-item-info';
     info.innerHTML = 'Fotoğraf ' + (i+1) + (p.date ? '<br><span style="color:rgba(255,180,190,.4)">'+p.date+'</span>' : '') + (p.locationName ? '<br><span style="color:rgba(255,180,190,.3)">📍 '+p.locationName+'</span>' : '');
     var delBtn = document.createElement('button');
     delBtn.textContent = 'Sil';
-    delBtn.onclick = (function(idx){
+    delBtn.onclick = (function(idx, photo){
       return function(){
-        delBtn.textContent = '...';
-        var arr = getStoredPhotos();
-        arr.splice(idx,1);
-        saveStoredPhotosRemote(arr, function(){
-          _photoCache = arr;
-          localStorage.setItem('adminPhotos', JSON.stringify(arr));
+        delBtn.textContent = '⏳';
+        delBtn.disabled = true;
+        deletePhotoFromFirebase(photo, function(){
+          var arr = getStoredPhotos().slice();
+          arr.splice(idx,1);
+          saveStoredPhotos(arr);
           renderAdminGalleryList();
           rebuildGalleryFromStorage();
         });
       };
-    })(i);
+    })(i, p);
     item.appendChild(img);
     item.appendChild(info);
     item.appendChild(delBtn);
@@ -1615,25 +1705,16 @@ function refreshMemoryMap(){
   }
 }
 
-// Sayfa yüklendiğinde uzaktan fotoğrafları yükle
+// Sayfa yüklenince Firebase'den fotoğrafları yükle + realtime dinle
 (function loadStoredPhotosOnStart(){
-  // Önce localStorage'dan anlık yükle (hızlı başlangıç)
-  var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
-  var track = document.getElementById('polaroidTrack');
-  if(local.length){
-    _photoCache = local;
-    local.forEach(function(p){ track.appendChild(makePolaroidEl(p)); });
-  }
-  // Sonra uzaktan senkronize et
-  getStoredPhotosRemote(function(remote){
-    if(remote.length !== local.length || JSON.stringify(remote.map(function(r){return r.id;})) !== JSON.stringify(local.map(function(r){return r.id;}))){
-      // Fark var - yeniden çiz
-      track.querySelectorAll('[data-admin]').forEach(function(el){ el.remove(); });
-      remote.forEach(function(p){ track.appendChild(makePolaroidEl(p)); });
-      localStorage.setItem('adminPhotos', JSON.stringify(remote));
-      if(typeof refreshMemoryMap === 'function') refreshMemoryMap();
-    }
+  getStoredPhotosRemote(function(photos){
+    var track = document.getElementById('polaroidTrack');
+    track.querySelectorAll('[data-admin]').forEach(function(el){ el.remove(); });
+    photos.forEach(function(p){ track.appendChild(makePolaroidEl(p)); });
+    if(typeof refreshMemoryMap === 'function') refreshMemoryMap();
   });
+  // Realtime güncellemeleri dinle (Yüsra sayfayı açıkken de görür)
+  startRealtimeSync();
 })();
 
 
@@ -1645,7 +1726,7 @@ var startDate = new Date('2024-12-13T00:00:00');
 var specialDays = [
   { type:'anniv',    label:'Yıl Dönümü',    icon:'💑', month:12, day:13 },
   { type:'birthday', label:'Yüsra Doğum Günü', icon:'🎂', month:3,  day:10 },
-  { type:'birthday', label:'Yunus Doğum Günü', icon:'🎂', month:12, day:29 },
+  { type:'birthday', label:'Yunus Doğum Günü', icon:'🎂', month:8,  day:29 },
   { type:'special',  label:'İlk Buluşma',   icon:'🌹', month:12, day:13 },
 ];
 
@@ -2030,5 +2111,6 @@ function calNextMonth(){
 })();
 
 </script>
+<script id="embeddedPhotosData" type="application/json"></script>
 </body>
 </html>
