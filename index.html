@@ -179,6 +179,69 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .location-row .field-wrap{flex:1;}
 .btn-gps{background:rgba(255,80,100,.15);border:1px solid rgba(255,150,150,.25);border-radius:9px;color:rgba(255,200,210,.7);font-size:18px;padding:9px 12px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-gps:hover{background:rgba(255,80,100,.3);}
+/* ===== TAKVİM ===== */
+#calendarScreen{background:linear-gradient(160deg,var(--bg3) 0%,var(--bg4) 50%,var(--bg3) 100%);}
+.cal-outer{width:100%;max-width:400px;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-month-label{font-family:'Dancing Script',cursive;font-size:26px;color:var(--blush);text-shadow:0 0 18px rgba(255,150,170,.4);text-align:center;flex:1;}
+.cal-nav{background:none;border:1px solid rgba(255,150,150,.18);border-radius:50%;width:34px;height:34px;color:rgba(255,200,210,.7);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.cal-nav:hover{background:rgba(255,80,100,.15);color:var(--blush);}
+.cal-daynames{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;}
+.cal-dn{font-size:9px;color:rgba(255,200,200,.3);text-align:center;letter-spacing:1px;text-transform:uppercase;padding:4px 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;font-size:13px;color:rgba(255,200,210,.6);cursor:default;position:relative;transition:background .15s;}
+.cal-cell.empty{background:none;}
+.cal-cell.today{background:rgba(255,80,100,.18);color:var(--blush);font-weight:700;border:1px solid rgba(255,80,100,.35);}
+.cal-cell.has-event{cursor:pointer;}
+.cal-cell.has-event:hover{background:rgba(255,80,100,.12);}
+.cal-event-dot{width:5px;height:5px;border-radius:50%;position:absolute;bottom:4px;}
+.cal-cell.anniv .cal-event-dot{background:#e8334a;}
+.cal-cell.birthday .cal-event-dot{background:#ffb3c1;}
+.cal-cell.special .cal-event-dot{background:#ffd700;}
+.cal-cell.milestone-day .cal-event-dot{background:#c8a2e8;}
+.cal-event-emoji{font-size:14px;line-height:1;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,200,200,.35);letter-spacing:1px;}
+.cal-legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.cal-tooltip{position:fixed;background:rgba(30,0,15,.95);border:1px solid rgba(255,150,150,.25);border-radius:10px;padding:10px 14px;font-size:12px;color:#ffd6de;z-index:4000;pointer-events:none;max-width:200px;backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(0,0,0,.4);display:none;}
+
+/* ===== MİLESTONE KUTLAMA ===== */
+#milestoneOverlay{position:fixed;inset:0;background:rgba(10,0,8,.92);backdrop-filter:blur(16px);z-index:3000;display:none;align-items:center;justify-content:center;flex-direction:column;}
+#milestoneOverlay.open{display:flex;}
+.milestone-box{text-align:center;padding:20px;max-width:480px;animation:cardIn .7s cubic-bezier(.22,1,.36,1) both;}
+.milestone-emoji{font-size:80px;display:block;animation:hb 1.2s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(255,80,100,.8));margin-bottom:8px;}
+.milestone-num{font-family:'Playfair Display',serif;font-size:80px;font-weight:600;color:var(--blush);line-height:1;text-shadow:0 0 60px rgba(255,150,170,.9),0 0 120px rgba(220,50,80,.4);}
+.milestone-label{font-family:'Dancing Script',cursive;font-size:28px;color:rgba(255,200,210,.8);margin:4px 0 6px;}
+.milestone-msg{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;color:rgba(255,220,225,.7);line-height:1.8;margin-bottom:24px;max-width:340px;}
+.milestone-close{background:linear-gradient(135deg,var(--rose),var(--deep));border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:14px;letter-spacing:1.5px;padding:13px 36px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.5);}
+
+/* ===== SEVGİ KARTI ===== */
+#loveCardOverlay{position:fixed;inset:0;background:rgba(10,0,8,.92);backdrop-filter:blur(16px);z-index:3000;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;}
+#loveCardOverlay.open{display:flex;}
+.love-card-wrap{position:relative;max-width:400px;width:100%;}
+#loveCardCanvas{width:100%;border-radius:20px;display:block;box-shadow:0 10px 60px rgba(220,50,80,.45);}
+.love-card-actions{display:flex;gap:10px;margin-top:14px;justify-content:center;flex-wrap:wrap;}
+.love-card-btn{background:linear-gradient(135deg,var(--rose),var(--deep));border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:13px;letter-spacing:1.5px;padding:12px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.45);transition:transform .15s;}
+.love-card-btn:hover{transform:scale(1.05);}
+.love-card-btn.secondary{background:rgba(255,255,255,.07);border:1px solid rgba(255,150,150,.25);color:rgba(255,200,210,.8);}
+
+/* ===== ANİVERSARY GERİ SAYIM ===== */
+.anniversary-wrap{margin:14px auto 0;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;max-width:460px;}
+.anniversary-row{display:flex;gap:8px;width:100%;overflow-x:auto;justify-content:center;padding:2px 0;scrollbar-width:none;}
+.anniversary-row::-webkit-scrollbar{display:none;}
+.anniv-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,150,150,.12);border-radius:14px;padding:10px 14px;text-align:center;flex-shrink:0;min-width:100px;transition:transform .2s,border-color .2s;}
+.anniv-card:hover{transform:translateY(-2px);border-color:rgba(255,150,150,.3);}
+.anniv-card.today{border-color:rgba(255,80,100,.5);background:rgba(255,50,80,.08);animation:pulse 2s ease-in-out infinite;}
+.anniv-icon{font-size:20px;display:block;margin-bottom:4px;}
+.anniv-name{font-size:9px;color:rgba(255,200,200,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.anniv-days{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--blush);line-height:1;}
+.anniv-sub{font-size:9px;color:rgba(255,200,200,.3);letter-spacing:1px;margin-top:2px;}
+.anniv-section-label{font-size:9px;color:rgba(255,200,200,.2);letter-spacing:3px;text-transform:uppercase;}
+
+/* Paylaş butonu */
+.btn-share-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,150,150,.2);border-radius:50px;color:rgba(255,200,210,.8);font-family:'Lato',sans-serif;font-size:12px;letter-spacing:1px;padding:10px 22px;cursor:pointer;transition:all .2s;margin-top:6px;}
+.btn-share-card:hover{background:rgba(255,80,100,.12);color:var(--blush);}
+
 </style>
 </head>
 <body>
@@ -222,7 +285,10 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
       <button class="btn-poem" onclick="goPoem()">&#128214; &nbsp;Sana Bir &#350;iir</button>
       <button class="btn-poem" onclick="goGame()" style="color:rgba(255,200,210,.9);">&#127918; &nbsp;Oyun Oyna</button>
       <button class="btn-poem" onclick="goReasons()" style="color:rgba(255,200,210,.9);">&#127801; &nbsp;Seni Seviyorum &#199;&#252;nk&#252;...</button>
+      <button class="btn-poem" onclick="goCalendar()" style="color:rgba(255,200,210,.9);">&#128197; &nbsp;2026 Takvimi</button>
     </div>
+    <div class="anniversary-wrap" id="anniversaryWrap"></div>
+    <button class="btn-share-card" onclick="openLoveCard()">&#10024; Ka&#231; G&#252;nd&#252;r Seviliyorsun?</button>
   </div>
 </div>
 
@@ -345,12 +411,73 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     <div class="admin-success" id="adminSuccess"></div>
     <button class="admin-save-btn" id="adminSaveBtn" onclick="savePhotos()" disabled>Galeriye Ekle 💾</button>
 
-    <div class="admin-section-title" style="margin-top:24px;">Eklenen Fotoğraflar</div>
+    <!-- Sync kodu - diğer cihazlardan yükle -->
+    <div id="syncCodeWrap" style="display:none;margin-bottom:14px;"></div>
+    <div class="admin-section-title" style="margin-top:4px;">Diğer Cihazdan Senkronize Et</div>
+    <div class="location-row" style="margin-bottom:16px;">
+      <div class="field-wrap">
+        <input class="field-input" type="text" id="syncCodeInput" placeholder="Sync kodunu gir..." />
+      </div>
+      <button class="btn-gps" onclick="applySyncCode()" title="Senkronize et" style="font-size:13px;padding:9px 12px;">Sync</button>
+    </div>
+
+    <div class="admin-section-title">Eklenen Fotoğraflar</div>
     <div class="admin-gallery-list" id="adminGalleryList"></div>
 
     <button class="btn-back" style="margin-top:8px;" onclick="goBack('successScreen')">← Geri Dön</button>
   </div>
 </div>
+
+<!-- EKRAN: TAKVİM -->
+<div class="screen" id="calendarScreen">
+  <div class="cal-outer">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calPrevMonth()">&#8249;</button>
+      <div class="cal-month-label" id="calMonthLabel"></div>
+      <button class="cal-nav" onclick="calNextMonth()">&#8250;</button>
+    </div>
+    <div class="cal-daynames">
+      <div class="cal-dn">Pt</div><div class="cal-dn">Sa</div><div class="cal-dn">Ça</div>
+      <div class="cal-dn">Pe</div><div class="cal-dn">Cu</div>
+      <div class="cal-dn" style="color:rgba(255,150,150,.4);">Ct</div>
+      <div class="cal-dn" style="color:rgba(255,150,150,.4);">Pz</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#e8334a;"></div>Yıl dönümü</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#ffb3c1;"></div>Doğum günü</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#ffd700;"></div>Özel gün</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#c8a2e8;"></div>Milestone</div>
+    </div>
+  </div>
+  <button class="btn-back" style="margin-top:20px;" onclick="goBack('successScreen')">&#8592; Geri Dön</button>
+</div>
+
+<!-- TOOLTIP -->
+<div class="cal-tooltip" id="calTooltip"></div>
+
+<!-- MİLESTONE KUTLAMA OVERLAY -->
+<div id="milestoneOverlay" style="position:fixed;inset:0;background:rgba(10,0,8,.92);backdrop-filter:blur(16px);z-index:3000;display:none;align-items:center;justify-content:center;flex-direction:column;">
+  <div class="milestone-box">
+    <span class="milestone-emoji" id="milestoneEmoji">&#127881;</span>
+    <div class="milestone-num" id="milestoneNum">100</div>
+    <div class="milestone-label" id="milestoneLabel">G&#252;n Birlikte &#10084;</div>
+    <div class="milestone-msg" id="milestoneMsg"></div>
+    <button class="milestone-close" onclick="closeMilestone()">Devam Et &#10084;</button>
+  </div>
+</div>
+
+<!-- SEVGİ KARTI OVERLAY -->
+<div id="loveCardOverlay" style="position:fixed;inset:0;background:rgba(10,0,8,.92);backdrop-filter:blur(16px);z-index:3000;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;">
+  <div class="love-card-wrap">
+    <canvas id="loveCardCanvas" width="800" height="500"></canvas>
+    <div class="love-card-actions">
+      <button class="love-card-btn" onclick="downloadLoveCard()">&#8681; Kaydet</button>
+      <button class="love-card-btn secondary" onclick="closeLoveCard()">Kapat</button>
+    </div>
+  </div>
+</div>
+
 
 <script>
 
@@ -932,8 +1059,17 @@ function checkAdminPass(){
     renderUploadForms();
     document.getElementById('adminSuccess').textContent = '';
     document.getElementById('adminSaveBtn').disabled = true;
-    renderAdminGalleryList();
     goScreen('adminScreen');
+    // Mevcut sync kodu varsa göster
+    var existingBin = getSharedBinId();
+    if(existingBin) showSyncCode(existingBin);
+    // Uzaktan senkronize et ve listeyi güncelle
+    document.getElementById('adminSuccess').textContent = '⏳ Fotoğraflar senkronize ediliyor...';
+    getStoredPhotosRemote(function(photos){
+      rebuildGalleryFromStorage();
+      renderAdminGalleryList();
+      document.getElementById('adminSuccess').textContent = '';
+    });
   } else {
     document.getElementById('adminErr').textContent = 'Şifre yanlış 💔';
     document.getElementById('adminPassInput').value = '';
@@ -1015,93 +1151,208 @@ function renderUploadForms(){
     dateWrap.appendChild(dateLabel); dateWrap.appendChild(dateInput);
     dateRow.appendChild(dateInnerRow);
 
-    // Konum adı
-    var locRow = document.createElement('div');
-    locRow.className = 'field-row';
-    var locWrap = document.createElement('div');
-    locWrap.className = 'field-wrap';
-    var locLabel = document.createElement('div');
-    locLabel.className = 'field-label';
-    locLabel.textContent = 'Konum Adı';
-    var locInput = document.createElement('input');
-    locInput.type = 'text';
-    locInput.className = 'field-input';
-    locInput.placeholder = 'ör: Boğaz Köprüsü, İstanbul';
-    locInput.value = p.locationName;
-    locInput.oninput = function(){ pendingPhotos[i].locationName = this.value; };
-    locWrap.appendChild(locLabel); locWrap.appendChild(locInput);
+    // Konum arama + mini harita
+    var locLabel2 = document.createElement('div');
+    locLabel2.className = 'field-label';
+    locLabel2.style.marginBottom = '6px';
+    locLabel2.textContent = 'Konum';
+
+    // Arama satırı
+    var searchRow = document.createElement('div');
+    searchRow.className = 'location-row';
+    var searchWrap = document.createElement('div');
+    searchWrap.className = 'field-wrap';
+    var searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.className = 'field-input';
+    searchInput.placeholder = 'Yer ara... (ör: Boğaz Köprüsü)';
+    searchInput.value = p.locationName || '';
+    var searchBtn = document.createElement('button');
+    searchBtn.className = 'btn-gps';
+    searchBtn.title = 'Ara';
+    searchBtn.textContent = '🔍';
+    var gpsBtn2 = document.createElement('button');
+    gpsBtn2.className = 'btn-gps';
+    gpsBtn2.title = 'GPS konumumu kullan';
+    gpsBtn2.textContent = '📡';
+    searchWrap.appendChild(searchInput);
+    searchRow.appendChild(searchWrap);
+    searchRow.appendChild(searchBtn);
+    searchRow.appendChild(gpsBtn2);
+
+    // Mini harita container
+    var miniMapDiv = document.createElement('div');
+    miniMapDiv.className = 'admin-mini-map';
+    miniMapDiv.id = 'adminMiniMap_' + i;
+    miniMapDiv.style.cssText = 'height:160px;border-radius:10px;overflow:hidden;margin-top:8px;border:1px solid rgba(255,150,150,.15);position:relative;';
+
+    // Konum etiketi
+    var locNameTag = document.createElement('div');
+    locNameTag.className = 'field-label';
+    locNameTag.style.cssText = 'margin-top:5px;color:rgba(255,180,200,.45);font-size:10px;min-height:14px;';
+    locNameTag.id = 'locTag_' + i;
+    locNameTag.textContent = p.locationName ? '📍 ' + p.locationName : '';
+
+    // Arama fonksiyonu
+    searchBtn.onclick = (function(idx, si, lt, miniId, tagId){
+      return function(){
+        var q = si.value.trim();
+        if(!q) return;
+        searchBtn.textContent = '⏳';
+        fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(q)+'&limit=1')
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            searchBtn.textContent = '🔍';
+            if(!data.length){ searchBtn.textContent = '❌'; setTimeout(function(){searchBtn.textContent='🔍';},1500); return; }
+            var res = data[0];
+            pendingPhotos[idx].lat = parseFloat(res.lat);
+            pendingPhotos[idx].lng = parseFloat(res.lon);
+            pendingPhotos[idx].locationName = res.display_name.split(',').slice(0,2).join(',').trim();
+            si.value = pendingPhotos[idx].locationName;
+            document.getElementById(tagId).textContent = '📍 ' + pendingPhotos[idx].locationName;
+            placeAdminMiniMarker(miniId, pendingPhotos[idx].lat, pendingPhotos[idx].lng);
+          }).catch(function(){ searchBtn.textContent = '🔍'; });
+      };
+    })(i, searchInput, latInput2ref, 'adminMiniMap_'+i, 'locTag_'+i);
+
+    // Enter ile ara
+    var latInput2ref = null;
+    searchInput.addEventListener('keydown', (function(idx, si, sb, miniId, tagId){
+      return function(e){
+        if(e.key==='Enter'){ e.preventDefault(); sb.click(); }
+      };
+    })(i, searchInput, searchBtn, 'adminMiniMap_'+i, 'locTag_'+i));
 
     // GPS butonu
-    var gpsBtn = document.createElement('button');
-    gpsBtn.className = 'btn-gps';
-    gpsBtn.title = 'Mevcut konumu al';
-    gpsBtn.textContent = '📡';
-    gpsBtn.onclick = (function(idx, li){
+    gpsBtn2.onclick = (function(idx, si, miniId, tagId){
       return function(){
-        gpsBtn.textContent = '⏳';
+        gpsBtn2.textContent = '⏳';
         if(!navigator.geolocation){ alert('Konum desteklenmiyor'); return; }
         navigator.geolocation.getCurrentPosition(function(pos){
           pendingPhotos[idx].lat = pos.coords.latitude;
           pendingPhotos[idx].lng = pos.coords.longitude;
-          gpsBtn.textContent = '✓';
-          // Reverse geocode ile konum adı al
+          gpsBtn2.textContent = '📡';
           fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+pos.coords.latitude+'&lon='+pos.coords.longitude)
             .then(function(r){ return r.json(); })
             .then(function(data){
-              var name = data.address.city || data.address.town || data.address.village || data.address.county || '';
-              var country = data.address.country || '';
-              var full = name + (name && country ? ', ' + country : country);
-              if(!pendingPhotos[idx].locationName) {
-                pendingPhotos[idx].locationName = full;
-                li.value = full;
-              }
+              var name = (data.address.city||data.address.town||data.address.village||'') + (data.address.country?', '+data.address.country:'');
+              pendingPhotos[idx].locationName = name;
+              si.value = name;
+              document.getElementById(tagId).textContent = '📍 ' + name;
+              placeAdminMiniMarker(miniId, pendingPhotos[idx].lat, pendingPhotos[idx].lng);
             }).catch(function(){});
-        }, function(){ gpsBtn.textContent = '📡'; alert('Konum alınamadı'); });
+        }, function(){ gpsBtn2.textContent = '📡'; alert('Konum alınamadı.'); });
       };
-    })(i, locInput);
-
-    var locInnerRow = document.createElement('div');
-    locInnerRow.className = 'location-row';
-    locInnerRow.appendChild(locWrap);
-    locInnerRow.appendChild(gpsBtn);
-    locRow.appendChild(locInnerRow);
-
-    // Koordinat satırı (opsiyonel manuel giriş)
-    var coordRow = document.createElement('div');
-    coordRow.className = 'field-row';
-    var latWrap = document.createElement('div'); latWrap.className = 'field-wrap';
-    var latLabel = document.createElement('div'); latLabel.className = 'field-label'; latLabel.textContent = 'Enlem (opsiyonel)';
-    var latInput = document.createElement('input'); latInput.type = 'number'; latInput.className = 'field-input'; latInput.placeholder = 'ör: 41.0082';
-    latInput.step = 'any';
-    if(p.lat) latInput.value = p.lat;
-    latInput.oninput = function(){ pendingPhotos[i].lat = parseFloat(this.value) || null; };
-    latWrap.appendChild(latLabel); latWrap.appendChild(latInput);
-
-    var lngWrap = document.createElement('div'); lngWrap.className = 'field-wrap';
-    var lngLabel = document.createElement('div'); lngLabel.className = 'field-label'; lngLabel.textContent = 'Boylam (opsiyonel)';
-    var lngInput = document.createElement('input'); lngInput.type = 'number'; lngInput.className = 'field-input'; lngInput.placeholder = 'ör: 28.9784';
-    lngInput.step = 'any';
-    if(p.lng) lngInput.value = p.lng;
-    lngInput.oninput = function(){ pendingPhotos[i].lng = parseFloat(this.value) || null; };
-    lngWrap.appendChild(lngLabel); lngWrap.appendChild(lngInput);
-    coordRow.appendChild(latWrap); coordRow.appendChild(lngWrap);
+    })(i, searchInput, 'adminMiniMap_'+i, 'locTag_'+i);
 
     form.appendChild(header);
     form.appendChild(dateRow);
-    form.appendChild(locRow);
-    form.appendChild(coordRow);
+    form.appendChild(locLabel2);
+    form.appendChild(searchRow);
+    form.appendChild(miniMapDiv);
+    form.appendChild(locNameTag);
     wrap.appendChild(form);
+
+    // Mini haritayı başlat (Leaflet yüklü olmalı)
+    (function(idx, miniId){
+      setTimeout(function(){
+        initAdminMiniMap(miniId, pendingPhotos[idx].lat, pendingPhotos[idx].lng);
+      }, 100);
+    })(i, 'adminMiniMap_'+i);
   });
   document.getElementById('adminSaveBtn').disabled = false;
 }
 
+/* ===== KALICI DEPOLAMA (JSONBin.io public) ===== */
+// İlk admin fotoğraf kaydettiğinde otomatik public bin oluşturulur.
+// Bin ID localStorage'a kaydedilir VE admin panelinde gösterilir.
+// Yüsra başka cihazdan açarsa: admin panelinde "Sync Kodu" girer → o bin'den yükler.
+
+var _photoCache = null;
+var SHARED_BIN_STORAGE_KEY = 'sevgilim_bin_id';
+
+function getSharedBinId(){ return localStorage.getItem(SHARED_BIN_STORAGE_KEY) || null; }
+function setSharedBinId(id){ localStorage.setItem(SHARED_BIN_STORAGE_KEY, id); }
+
 function getStoredPhotos(){
-  try { return JSON.parse(localStorage.getItem('adminPhotos') || '[]'); }
-  catch(e){ return []; }
+  return _photoCache || JSON.parse(localStorage.getItem('adminPhotos')||'[]');
+}
+
+function getStoredPhotosRemote(cb){
+  var binId = getSharedBinId();
+  if(!binId){
+    var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
+    _photoCache = local; cb(local); return;
+  }
+  fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',{
+    headers:{'X-Access-Key':'$2a$10$wECFAkDBCEFQ1GBzjl5FteB7dlRrIOcOmEWnVRm2OxnX6nqWAJpVe'}
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var photos = (d.record && Array.isArray(d.record.photos)) ? d.record.photos : [];
+    _photoCache = photos;
+    localStorage.setItem('adminPhotos', JSON.stringify(photos));
+    cb(photos);
+  })
+  .catch(function(){
+    var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
+    _photoCache = local; cb(local);
+  });
+}
+
+function saveStoredPhotosRemote(arr, cb){
+  _photoCache = arr;
+  localStorage.setItem('adminPhotos', JSON.stringify(arr));
+  var binId = getSharedBinId();
+  var payload = JSON.stringify({photos: arr});
+  var headers = {'Content-Type':'application/json','X-Access-Key':'$2a$10$wECFAkDBCEFQ1GBzjl5FteB7dlRrIOcOmEWnVRm2OxnX6nqWAJpVe'};
+  if(binId){
+    fetch('https://api.jsonbin.io/v3/b/'+binId,{method:'PUT',headers:headers,body:payload})
+    .then(function(r){return r.json();})
+    .then(function(){ if(cb)cb(true); })
+    .catch(function(){ if(cb)cb(false); });
+  } else {
+    // Yeni public bin oluştur
+    var ch = Object.assign({},headers,{'X-Bin-Name':'sevgilim','X-Bin-Private':'false'});
+    fetch('https://api.jsonbin.io/v3/b',{method:'POST',headers:ch,body:payload})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.metadata && d.metadata.id){
+        setSharedBinId(d.metadata.id);
+        showSyncCode(d.metadata.id);
+        if(cb)cb(true);
+      } else { if(cb)cb(false); }
+    })
+    .catch(function(){ if(cb)cb(false); });
+  }
 }
 
 function saveStoredPhotos(arr){
+  _photoCache = arr;
   localStorage.setItem('adminPhotos', JSON.stringify(arr));
+  saveStoredPhotosRemote(arr, null);
+}
+
+function showSyncCode(binId){
+  var el = document.getElementById('syncCodeWrap');
+  if(el){ el.innerHTML = '<div class="field-label" style="margin-bottom:4px;">Sync Kodu (diğer cihazlar için)</div><div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,150,150,.2);border-radius:9px;padding:8px 12px;font-size:13px;color:#ffd6de;letter-spacing:1px;word-break:break-all;">'+binId+'</div>'; el.style.display='block'; }
+}
+
+function applySyncCode(){
+  var input = document.getElementById('syncCodeInput');
+  if(!input) return;
+  var code = input.value.trim();
+  if(!code) return;
+  setSharedBinId(code);
+  input.value = '';
+  var successEl = document.getElementById('adminSuccess');
+  successEl.textContent = '⏳ Fotoğraflar yükleniyor...';
+  getStoredPhotosRemote(function(photos){
+    rebuildGalleryFromStorage();
+    renderAdminGalleryList();
+    successEl.textContent = '✓ ' + photos.length + ' fotoğraf yüklendi!';
+    setTimeout(function(){successEl.textContent='';},3000);
+  });
 }
 
 function savePhotos(){
@@ -1110,16 +1361,22 @@ function savePhotos(){
   pendingPhotos.forEach(function(p){
     stored.push({ dataUrl: p.dataUrl, id: Date.now() + Math.random(), date: p.date, locationName: p.locationName, lat: p.lat, lng: p.lng });
   });
-  saveStoredPhotos(stored);
-  addPhotosToGallery(pendingPhotos);
-  pendingPhotos = [];
-  renderUploadForms();
-  renderAdminGalleryList();
   var btn = document.getElementById('adminSaveBtn');
-  btn.disabled = true;
   var successEl = document.getElementById('adminSuccess');
-  successEl.textContent = '✓ ' + stored.length + ' fotoğraf galeride!';
-  setTimeout(function(){ successEl.textContent = ''; }, 3000);
+  btn.disabled = true;
+  btn.textContent = 'Kaydediliyor... ⏳';
+  successEl.textContent = '';
+  saveStoredPhotosRemote(stored, function(ok){
+    _photoCache = stored;
+    localStorage.setItem('adminPhotos', JSON.stringify(stored));
+    addPhotosToGallery(pendingPhotos);
+    pendingPhotos = [];
+    renderUploadForms();
+    renderAdminGalleryList();
+    btn.textContent = 'Galeriye Ekle 💾';
+    successEl.textContent = ok ? '✓ ' + stored.length + ' fotoğraf kaydedildi!' : '⚠ Yerel kaydedildi (internet yok)';
+    setTimeout(function(){ successEl.textContent = ''; }, 3500);
+  });
 }
 
 function makePolaroidEl(photoObj){
@@ -1190,13 +1447,19 @@ function renderAdminGalleryList(){
     info.innerHTML = 'Fotoğraf ' + (i+1) + (p.date ? '<br><span style="color:rgba(255,180,190,.4)">'+p.date+'</span>' : '') + (p.locationName ? '<br><span style="color:rgba(255,180,190,.3)">📍 '+p.locationName+'</span>' : '');
     var delBtn = document.createElement('button');
     delBtn.textContent = 'Sil';
-    delBtn.onclick = function(){
-      var arr = getStoredPhotos();
-      arr.splice(i, 1);
-      saveStoredPhotos(arr);
-      renderAdminGalleryList();
-      rebuildGalleryFromStorage();
-    };
+    delBtn.onclick = (function(idx){
+      return function(){
+        delBtn.textContent = '...';
+        var arr = getStoredPhotos();
+        arr.splice(idx,1);
+        saveStoredPhotosRemote(arr, function(){
+          _photoCache = arr;
+          localStorage.setItem('adminPhotos', JSON.stringify(arr));
+          renderAdminGalleryList();
+          rebuildGalleryFromStorage();
+        });
+      };
+    })(i);
     item.appendChild(img);
     item.appendChild(info);
     item.appendChild(delBtn);
@@ -1215,13 +1478,22 @@ function rebuildGalleryFromStorage(){
   refreshMemoryMap();
 }
 
-/* ===== ANI HARİTASI (Leaflet) ===== */
-var memoryMapInstance = null;
-var mapMarkersLayer = null;
+function deleteStoredPhoto(idx){
+  var arr = getStoredPhotos();
+  arr.splice(idx,1);
+  var btn = document.querySelector('#adminGalleryList .admin-gallery-item:nth-child('+(idx+1)+') button');
+  saveStoredPhotosRemote(arr, function(ok){
+    _photoCache = arr;
+    localStorage.setItem('adminPhotos', JSON.stringify(arr));
+    renderAdminGalleryList();
+    rebuildGalleryFromStorage();
+  });
+}
 
-function initMemoryMap(){
-  if(memoryMapInstance) return;
-  // Leaflet CSS
+/* ===== ADMİN MİNİ HARİTA ===== */
+var adminMiniMaps = {}; // id -> {map, marker}
+
+function ensureLeaflet(cb){
   if(!document.getElementById('leafletCss')){
     var lc = document.createElement('link');
     lc.id = 'leafletCss';
@@ -1229,15 +1501,77 @@ function initMemoryMap(){
     lc.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
     document.head.appendChild(lc);
   }
-  // Leaflet JS
   if(typeof L === 'undefined'){
-    var ls = document.createElement('script');
-    ls.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    ls.onload = function(){ buildMap(); };
-    document.head.appendChild(ls);
+    if(!document.getElementById('leafletJs')){
+      var ls = document.createElement('script');
+      ls.id = 'leafletJs';
+      ls.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      ls.onload = cb;
+      document.head.appendChild(ls);
+    } else {
+      // Script tag var ama henüz yüklenmedi
+      document.getElementById('leafletJs').addEventListener('load', cb);
+    }
   } else {
-    buildMap();
+    cb();
   }
+}
+
+function initAdminMiniMap(mapId, lat, lng){
+  ensureLeaflet(function(){
+    var el = document.getElementById(mapId);
+    if(!el || adminMiniMaps[mapId]) return;
+    var centerLat = lat || 39.9; var centerLng = lng || 32.8; var zoom = lat ? 13 : 5;
+    var m = L.map(el, { zoomControl:false, attributionControl:false }).setView([centerLat, centerLng], zoom);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{ maxZoom:19, subdomains:'abcd' }).addTo(m);
+    var marker = null;
+    if(lat && lng){
+      marker = L.marker([lat,lng]).addTo(m);
+    }
+    // Haritaya tıklanınca pin bırak
+    var mapId2 = mapId;
+    m.on('click', (function(mid){
+      return function(e){
+        var idx = parseInt(mid.replace('adminMiniMap_',''));
+        pendingPhotos[idx].lat = e.latlng.lat;
+        pendingPhotos[idx].lng = e.latlng.lng;
+        placeAdminMiniMarker(mid, e.latlng.lat, e.latlng.lng);
+        // Reverse geocode
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+e.latlng.lat+'&lon='+e.latlng.lng)
+          .then(function(r){return r.json();})
+          .then(function(data){
+            var name = (data.address.city||data.address.town||data.address.village||'');
+            var country = data.address.country||'';
+            var full = name + (name&&country?', '+country:country);
+            pendingPhotos[idx].locationName = full;
+            var tagEl = document.getElementById('locTag_'+idx);
+            var si = document.querySelector('#adminMiniMap_'+idx).closest('.pending-photo-form').querySelector('input[type=text]');
+            if(tagEl) tagEl.textContent = '📍 ' + full;
+            if(si) si.value = full;
+          }).catch(function(){});
+      };
+    })(mapId));
+    adminMiniMaps[mapId] = { map: m, marker: marker };
+    // Küçük zoom control sağ-alt
+    L.control.zoom({ position:'bottomright' }).addTo(m);
+  });
+}
+
+function placeAdminMiniMarker(mapId, lat, lng){
+  if(!adminMiniMaps[mapId]) return;
+  var obj = adminMiniMaps[mapId];
+  if(obj.marker){ obj.map.removeLayer(obj.marker); }
+  obj.marker = L.marker([lat,lng]).addTo(obj.map);
+  obj.map.setView([lat,lng], 13);
+}
+
+/* ===== ANI HARİTASI (Leaflet) ===== */
+var memoryMapInstance = null;
+var mapMarkersLayer = null;
+
+function initMemoryMap(){
+  if(memoryMapInstance) return;
+  ensureLeaflet(function(){ buildMap(); });
 }
 
 function buildMap(){
@@ -1281,15 +1615,421 @@ function refreshMemoryMap(){
   }
 }
 
-// Sayfa yüklendiğinde kayıtlı fotoğrafları galeriye ekle
+// Sayfa yüklendiğinde uzaktan fotoğrafları yükle
 (function loadStoredPhotosOnStart(){
-  var stored = getStoredPhotos();
-  if(!stored.length) return;
+  // Önce localStorage'dan anlık yükle (hızlı başlangıç)
+  var local = JSON.parse(localStorage.getItem('adminPhotos')||'[]');
   var track = document.getElementById('polaroidTrack');
-  stored.forEach(function(p){
-    var el = makePolaroidEl(p);
-    track.appendChild(el);
+  if(local.length){
+    _photoCache = local;
+    local.forEach(function(p){ track.appendChild(makePolaroidEl(p)); });
+  }
+  // Sonra uzaktan senkronize et
+  getStoredPhotosRemote(function(remote){
+    if(remote.length !== local.length || JSON.stringify(remote.map(function(r){return r.id;})) !== JSON.stringify(local.map(function(r){return r.id;}))){
+      // Fark var - yeniden çiz
+      track.querySelectorAll('[data-admin]').forEach(function(el){ el.remove(); });
+      remote.forEach(function(p){ track.appendChild(makePolaroidEl(p)); });
+      localStorage.setItem('adminPhotos', JSON.stringify(remote));
+      if(typeof refreshMemoryMap === 'function') refreshMemoryMap();
+    }
   });
 })();
 
+
+/* ===== MİLESTONE & ANİVERSARY & SEVGİ KARTI ===== */
+
+var startDate = new Date('2024-12-13T00:00:00');
+
+// Özel günler: {type:'anniv'|'birthday', label, icon, month(1-12), day}
+var specialDays = [
+  { type:'anniv',    label:'Yıl Dönümü',    icon:'💑', month:12, day:13 },
+  { type:'birthday', label:'Yüsra Doğum Günü', icon:'🎂', month:3,  day:10 },
+  { type:'birthday', label:'Yunus Doğum Günü', icon:'🎂', month:12, day:29 },
+  { type:'special',  label:'İlk Buluşma',   icon:'🌹', month:12, day:13 },
+];
+
+// Milestone mesajları
+var milestoneData = {
+  100:  { emoji:'🎉', msg:'100 gün boyunca her gün daha çok sevdim seni. Bu sadece başlangıç.' },
+  200:  { emoji:'💖', msg:'200 gün! İnanabiliyor musun? Seninle geçen her gün bir mucize gibi.' },
+  365:  { emoji:'🌹', msg:'Tam bir yıl! 365 gün boyunca hayatımın en güzel kısmı olurdun.' },
+  500:  { emoji:'✨', msg:'500 gün ve hâlâ her sabah seni görmek istiyorum. Hep böyle olsun.' },
+  730:  { emoji:'👑', msg:'İki yıl! Seninle geçirdiğim her an kalbime işlendi.' },
+  1000: { emoji:'🏆', msg:'1000 gün! Bin gün önce hayatıma girdin ve her şey değişti.' },
+};
+
+function getDayCount(){
+  return Math.floor((new Date() - startDate) / 86400000);
+}
+
+function checkMilestone(){
+  var days = getDayCount();
+  var key = localStorage.getItem('lastMilestoneSeen') || '0';
+  var lastSeen = parseInt(key);
+  var milestones = Object.keys(milestoneData).map(Number).sort(function(a,b){return a-b;});
+  for(var i=0;i<milestones.length;i++){
+    var m = milestones[i];
+    if(days >= m && lastSeen < m){
+      localStorage.setItem('lastMilestoneSeen', m.toString());
+      showMilestone(m, days);
+      return;
+    }
+  }
+}
+
+function showMilestone(milestone, days){
+  var d = milestoneData[milestone] || { emoji:'💕', msg:'Birlikte geçirdiğimiz her gün paha biçilmez.' };
+  document.getElementById('milestoneEmoji').textContent = d.emoji;
+  document.getElementById('milestoneNum').textContent = milestone;
+  document.getElementById('milestoneLabel').textContent = 'Gündür Birlikte ' + d.emoji;
+  document.getElementById('milestoneMsg').textContent = d.msg;
+  document.getElementById('milestoneOverlay').style.display='flex';
+  // ekstra konfeti
+  setTimeout(function(){
+    for(var i=0;i<3;i++) setTimeout(launchConfetti, i*600);
+  }, 300);
+}
+
+function closeMilestone(){
+  document.getElementById('milestoneOverlay').style.display='none';
+}
+
+/* ===== ANİVERSARY GERİ SAYIM ===== */
+function buildAnniversaryWrap(){
+  var wrap = document.getElementById('anniversaryWrap');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+
+  var now = new Date();
+  var cards = [];
+
+  specialDays.forEach(function(sd){
+    var next = new Date(now.getFullYear(), sd.month-1, sd.day);
+    if(next < now) next = new Date(now.getFullYear()+1, sd.month-1, sd.day);
+    var diff = Math.ceil((next - now) / 86400000);
+    var isToday = diff === 0 || (next.getDate()===now.getDate() && next.getMonth()===now.getMonth());
+    cards.push({ sd:sd, diff:isToday?0:diff, isToday:isToday, next:next });
+  });
+
+  cards.sort(function(a,b){ return a.diff - b.diff; });
+
+  var label = document.createElement('div');
+  label.className = 'anniv-section-label';
+  label.textContent = '✦ yaklaşan özel günler ✦';
+  wrap.appendChild(label);
+
+  var row = document.createElement('div');
+  row.className = 'anniversary-row';
+
+  cards.forEach(function(c){
+    var card = document.createElement('div');
+    card.className = 'anniv-card' + (c.isToday ? ' today' : '');
+    var icon = document.createElement('span');
+    icon.className = 'anniv-icon';
+    icon.textContent = c.isToday ? '🎊' : c.sd.icon;
+    var name = document.createElement('div');
+    name.className = 'anniv-name';
+    name.textContent = c.sd.label;
+    var days = document.createElement('div');
+    days.className = 'anniv-days';
+    days.textContent = c.isToday ? 'BUGÜN!' : c.diff;
+    var sub = document.createElement('div');
+    sub.className = 'anniv-sub';
+    sub.textContent = c.isToday ? '🎉 kutla!' : 'gün kaldı';
+    card.appendChild(icon); card.appendChild(name); card.appendChild(days); card.appendChild(sub);
+    row.appendChild(card);
+
+    // Bugünse milestone gibi konfeti at
+    if(c.isToday){
+      var todayKey = 'todayCelebrated_' + c.sd.label + '_' + now.getFullYear();
+      if(!localStorage.getItem(todayKey)){
+        localStorage.setItem(todayKey,'1');
+        setTimeout(function(){ launchConfetti(); }, 800);
+      }
+    }
+  });
+
+  wrap.appendChild(row);
+}
+
+/* ===== SEVGİ KARTI ===== */
+function openLoveCard(){
+  document.getElementById('loveCardOverlay').style.display='flex';
+  setTimeout(drawLoveCard, 80);
+}
+
+function closeLoveCard(){
+  document.getElementById('loveCardOverlay').style.display='none';
+}
+
+function drawLoveCard(){
+  var canvas = document.getElementById('loveCardCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var days = getDayCount();
+
+  // Arkaplan gradient
+  var bg = ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#1a0010');
+  bg.addColorStop(0.5,'#3d0020');
+  bg.addColorStop(1,'#1a0010');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,W,H);
+
+  // Dekoratif daireler
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  ctx.fillStyle = '#e8334a';
+  ctx.beginPath(); ctx.arc(W*0.15, H*0.2, 120, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(W*0.88, H*0.78, 90, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // Yıldızlar
+  ctx.save();
+  for(var i=0;i<60;i++){
+    var sx = (Math.sin(i*137.5)*0.5+0.5)*W;
+    var sy = (Math.cos(i*97.3)*0.5+0.5)*H;
+    var sa = 0.15 + (i%5)*0.08;
+    ctx.globalAlpha = sa;
+    ctx.fillStyle = '#ffd6de';
+    ctx.beginPath(); ctx.arc(sx,sy,0.8+i%2,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+
+  // Üst ince çizgi
+  var lineGrad = ctx.createLinearGradient(60,0,W-60,0);
+  lineGrad.addColorStop(0,'transparent');
+  lineGrad.addColorStop(0.5,'rgba(232,51,74,.5)');
+  lineGrad.addColorStop(1,'transparent');
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(60, 54); ctx.lineTo(W-60, 54); ctx.stroke();
+
+  // "Kaç Gündür Seviliyorsun?" üst başlık
+  ctx.save();
+  ctx.fillStyle = 'rgba(255,200,200,0.35)';
+  ctx.font = '300 13px Lato, sans-serif';
+  ctx.letterSpacing = '5px';
+  ctx.textAlign = 'center';
+  ctx.fillText('KAÇ GÜNDÜR SEVİLİYORSUN?', W/2, 42);
+  ctx.restore();
+
+  // Büyük gün sayısı
+  ctx.save();
+  ctx.textAlign = 'center';
+  var numGrad = ctx.createLinearGradient(W/2-100, H/2-70, W/2+100, H/2+30);
+  numGrad.addColorStop(0,'#ffd6de');
+  numGrad.addColorStop(1,'#e8334a');
+  ctx.fillStyle = numGrad;
+  ctx.shadowColor = 'rgba(232,51,74,0.6)';
+  ctx.shadowBlur = 40;
+  ctx.font = 'bold 110px "Playfair Display", serif';
+  ctx.fillText(days, W/2, H/2 + 30);
+  ctx.restore();
+
+  // "GÜN" yazısı
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,180,190,0.7)';
+  ctx.font = '300 28px Lato, sans-serif';
+  ctx.fillText('GÜN', W/2, H/2 + 72);
+  ctx.restore();
+
+  // İsimler
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,200,210,0.55)';
+  ctx.font = '500 18px "Dancing Script", cursive';
+  ctx.fillText('Yüsra & Yunus', W/2, H/2 - 90);
+  ctx.restore();
+
+  // Alt tarih
+  var sd = startDate;
+  var dateStr = sd.getDate() + '.' + (sd.getMonth()+1) + '.' + sd.getFullYear() + ' — bugün';
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,180,190,0.3)';
+  ctx.font = '300 12px Lato, sans-serif';
+  ctx.fillText(dateStr, W/2, H - 32);
+  ctx.restore();
+
+  // Alt çizgi
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(60, H-50); ctx.lineTo(W-60, H-50); ctx.stroke();
+
+  // Kalpler
+  var hearts = ['❤','💕','🌹','✨'];
+  ctx.save();
+  ctx.font = '18px serif';
+  ctx.textAlign = 'center';
+  [W/2-160, W/2+160].forEach(function(hx){
+    ctx.globalAlpha = 0.4;
+    ctx.fillText('❤', hx, H/2 + 35);
+  });
+  ctx.restore();
+}
+
+function downloadLoveCard(){
+  var canvas = document.getElementById('loveCardCanvas');
+  var link = document.createElement('a');
+  link.download = 'sevgi-kartim.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+/* ===== BAŞLANGIÇTA KONTROL ET ===== */
+// startCounter override - milestone ve anniversary da başlat
+var _origStartCounter = startCounter;
+startCounter = function(){
+  _origStartCounter();
+  setTimeout(checkMilestone, 1200);
+  setTimeout(buildAnniversaryWrap, 600);
+};
+
+// Sayfa ilk açıldığında successScreen aktifse (direkt link vs)
+if(document.getElementById('successScreen').classList.contains('active')){
+  startCounter();
+}
+
+
+/* ===== TAKVİM ===== */
+function goCalendar(){ goScreen('calendarScreen'); renderCalendar(); }
+
+var calYear = 2026;
+var calMonth = 0; // 0-indexed, default Ocak 2026
+
+// Özel günlerin takvimdeki eşleşmesi
+var CAL_EVENTS = [
+  { month:12, day:13, type:'anniv',    label:'💑 Yıl Dönümü',        color:'#e8334a' },
+  { month:3,  day:10, type:'birthday', label:'🎂 Yüsra'nın Doğum Günü', color:'#ffb3c1' },
+  { month:12, day:29, type:'birthday', label:'🎂 Yunus'un Doğum Günü',  color:'#ffb3c1' },
+  { month:12, day:13, type:'special',  label:'🌹 İlk Buluşma',         color:'#ffd700' },
+];
+
+// Milestone günlerini hesapla
+function getMilestoneDays(){
+  var milestones = [100,200,365,500,730,1000];
+  var result = [];
+  milestones.forEach(function(m){
+    var d = new Date(startDate.getTime() + m*86400000);
+    result.push({ month: d.getMonth()+1, day: d.getDate(), year: d.getFullYear(), label: '✨ '+m+'. Gün', milestone: m });
+  });
+  return result;
+}
+
+var TR_MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+function renderCalendar(){
+  document.getElementById('calMonthLabel').textContent = TR_MONTHS[calMonth] + ' ' + calYear;
+
+  var grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  var firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  // Convert to Mon-based: Mon=0 ... Sun=6
+  var startOffset = (firstDay + 6) % 7;
+  var daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+  var today = new Date();
+  var mileDays = getMilestoneDays();
+
+  // Empty cells
+  for(var e=0; e<startOffset; e++){
+    var empty = document.createElement('div');
+    empty.className = 'cal-cell empty';
+    grid.appendChild(empty);
+  }
+
+  for(var d=1; d<=daysInMonth; d++){
+    var cell = document.createElement('div');
+    cell.className = 'cal-cell';
+
+    // Today?
+    if(today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d){
+      cell.classList.add('today');
+    }
+
+    // Check events
+    var events = [];
+    CAL_EVENTS.forEach(function(ev){
+      if(ev.month === calMonth+1 && ev.day === d) events.push(ev);
+    });
+    mileDays.forEach(function(m){
+      if(m.year===calYear && m.month===calMonth+1 && m.day===d) events.push({ type:'milestone', label:m.label, color:'#c8a2e8' });
+    });
+
+    var dayNum = document.createElement('span');
+    dayNum.className = 'cal-event-emoji';
+    dayNum.textContent = d;
+    cell.appendChild(dayNum);
+
+    if(events.length){
+      cell.classList.add('has-event');
+      // Use first event's type for dot color class
+      cell.classList.add(events[0].type);
+      var dot = document.createElement('div');
+      dot.className = 'cal-event-dot';
+      dot.style.background = events[0].color;
+      if(events.length>1) dot.style.boxShadow = '8px 0 0 '+events[1].color;
+      cell.appendChild(dot);
+
+      // Tooltip on hover
+      var tooltipText = events.map(function(ev){ return ev.label; }).join('
+');
+      cell.addEventListener('mouseenter', function(e){
+        var t = document.getElementById('calTooltip');
+        t.style.display = 'block';
+        t.innerHTML = events.map(function(ev){ return '<div>'+ev.label+'</div>'; }).join('');
+        t.style.left = Math.min(e.clientX+10, window.innerWidth-210)+'px';
+        t.style.top = (e.clientY-10)+'px';
+      });
+      cell.addEventListener('mouseleave', function(){
+        document.getElementById('calTooltip').style.display='none';
+      });
+      // Mobile tap
+      cell.addEventListener('click', function(){
+        var t = document.getElementById('calTooltip');
+        if(t.style.display==='none' || !t.style.display){
+          t.style.display='block';
+          t.innerHTML = events.map(function(ev){ return '<div>'+ev.label+'</div>'; }).join('');
+          var r = cell.getBoundingClientRect();
+          t.style.left = Math.min(r.left, window.innerWidth-210)+'px';
+          t.style.top = (r.bottom+4)+'px';
+          setTimeout(function(){ t.style.display='none'; }, 2500);
+        } else {
+          t.style.display='none';
+        }
+      });
+    }
+
+    // Weekend coloring
+    var dayOfWeek = (startOffset + d - 1) % 7;
+    if(dayOfWeek >= 5) cell.style.color = 'rgba(255,160,180,.55)';
+
+    grid.appendChild(cell);
+  }
+}
+
+function calPrevMonth(){
+  calMonth--;
+  if(calMonth < 0){ calMonth=11; calYear--; }
+  renderCalendar();
+}
+function calNextMonth(){
+  calMonth++;
+  if(calMonth > 11){ calMonth=0; calYear++; }
+  renderCalendar();
+}
+
+// Init calendar at current month
+(function(){
+  var now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+})();
+
 </script>
+</body>
+</html>
