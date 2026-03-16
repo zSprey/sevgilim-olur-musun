@@ -18,7 +18,7 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .screen.active{display:flex;}
 #askScreen .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,150,150,.2);border-radius:28px;padding:48px 44px;text-align:center;max-width:460px;width:100%;backdrop-filter:blur(16px);box-shadow:0 0 80px rgba(220,50,80,.12),inset 0 0 40px rgba(255,80,100,.03);animation:cardIn .9s cubic-bezier(.22,1,.36,1) both;}
 @keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(.94);}to{opacity:1;transform:translateY(0) scale(1);}}
-.big-heart{font-size:60px;display:block;margin-bottom:12px;animation:hb 1.5s ease-in-out infinite;}
+.big-heart{font-size:60px;display:block;margin-bottom:12px;animation:hb 1.5s ease-in-out infinite;cursor:pointer;}
 @keyframes hb{0%,100%{transform:scale(1);}14%{transform:scale(1.18);}28%{transform:scale(1);}42%{transform:scale(1.1);}56%{transform:scale(1);}}
 .name-label{font-size:11px;color:rgba(255,200,200,.5);letter-spacing:5px;text-transform:uppercase;margin-bottom:6px;}
 .name-display{font-family:'Dancing Script',cursive;font-size:52px;font-weight:700;color:var(--blush);margin-bottom:8px;text-shadow:0 0 40px rgba(255,150,170,.6);animation:nameGlow 3s ease-in-out infinite alternate;}
@@ -55,7 +55,7 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .polaroid-track{display:flex;gap:24px;padding:20px 80px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab;user-select:none;}
 .polaroid-track::-webkit-scrollbar{display:none;}
 .polaroid-track.grabbing{cursor:grabbing;}
-.polaroid{flex-shrink:0;background:#fffef9;padding:10px 10px 40px;border-radius:2px;scroll-snap-align:center;transform:rotate(var(--rot)) scale(.9);opacity:0;animation:polaroidIn .8s cubic-bezier(.22,1,.36,1) forwards;animation-delay:var(--delay);box-shadow:0 8px 30px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;width:190px;}
+.polaroid{flex-shrink:0;background:#fffef9;padding:10px 10px 10px;border-radius:2px;scroll-snap-align:center;transform:rotate(var(--rot)) scale(.9);opacity:0;animation:polaroidIn .8s cubic-bezier(.22,1,.36,1) forwards;animation-delay:var(--delay);box-shadow:0 8px 30px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;width:190px;}
 .polaroid:hover{transform:rotate(0deg) scale(1.08) translateY(-10px) !important;box-shadow:0 22px 55px rgba(220,50,80,.45),0 4px 14px rgba(0,0,0,.4);z-index:20;}
 @keyframes polaroidIn{0%{opacity:0;transform:rotate(calc(var(--rot)*2)) scale(.5) translateY(80px);}100%{opacity:1;transform:rotate(var(--rot)) scale(.9);}}
 .polaroid img{width:100%;height:175px;object-fit:cover;display:block;}
@@ -108,6 +108,77 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .reasons-btn:hover{transform:scale(1.06);box-shadow:0 6px 28px rgba(220,50,80,.65);}
 .reasons-btn:active{transform:scale(.97);}
 .reasons-counter{font-family:'Lato',sans-serif;font-size:11px;color:rgba(255,180,200,.35);letter-spacing:3px;}
+
+/* ADMIN PANELİ */
+#adminModal{position:fixed;inset:0;background:rgba(10,0,8,.85);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;}
+#adminModal.open{display:flex;}
+.admin-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,150,150,.25);border-radius:24px;padding:40px 36px;max-width:400px;width:90%;text-align:center;box-shadow:0 0 60px rgba(220,50,80,.18),inset 0 0 30px rgba(255,80,100,.03);animation:cardIn .5s cubic-bezier(.22,1,.36,1) both;}
+.admin-title{font-family:'Dancing Script',cursive;font-size:30px;color:var(--blush);margin-bottom:6px;text-shadow:0 0 20px rgba(255,150,170,.5);}
+.admin-sub{font-size:11px;color:rgba(255,200,200,.35);letter-spacing:3px;text-transform:uppercase;margin-bottom:24px;}
+.admin-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,150,150,.2);border-radius:12px;padding:13px 18px;color:#ffd6de;font-family:'Lato',sans-serif;font-size:15px;letter-spacing:1px;outline:none;text-align:center;margin-bottom:12px;transition:border-color .2s;}
+.admin-input:focus{border-color:rgba(255,150,150,.5);}
+.admin-input::placeholder{color:rgba(255,200,200,.25);}
+.admin-btn{background:linear-gradient(135deg,var(--rose),var(--deep));border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:14px;letter-spacing:1.5px;padding:13px 36px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.4);transition:transform .15s;width:100%;margin-bottom:10px;}
+.admin-btn:hover{transform:scale(1.03);}
+.admin-cancel{background:none;border:none;color:rgba(255,200,200,.35);font-size:11px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:color .2s;}
+.admin-cancel:hover{color:rgba(255,200,200,.7);}
+.admin-err{color:#ff6b8a;font-size:12px;margin-bottom:12px;min-height:18px;letter-spacing:.5px;}
+
+/* ADMIN PANEL EKRANI */
+#adminScreen{background:linear-gradient(160deg,var(--bg3) 0%,var(--bg4) 50%,var(--bg3) 100%);}
+.admin-panel-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,150,150,.2);border-radius:24px;padding:40px 32px;max-width:480px;width:100%;backdrop-filter:blur(12px);text-align:center;}
+.admin-panel-title{font-family:'Dancing Script',cursive;font-size:32px;color:var(--blush);margin-bottom:4px;text-shadow:0 0 24px rgba(255,150,170,.5);}
+.admin-panel-sub{font-size:10px;color:rgba(255,200,200,.3);letter-spacing:4px;text-transform:uppercase;margin-bottom:28px;}
+.upload-area{border:2px dashed rgba(255,150,150,.25);border-radius:16px;padding:32px 20px;cursor:pointer;transition:all .3s;margin-bottom:20px;position:relative;}
+.upload-area:hover{border-color:rgba(255,150,150,.5);background:rgba(255,80,100,.06);}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:36px;display:block;margin-bottom:8px;}
+.upload-label{font-size:13px;color:rgba(255,200,200,.5);letter-spacing:1px;}
+.upload-label span{color:var(--blush);}
+.upload-preview{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px;min-height:0;}
+.upload-preview img{width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid rgba(255,150,150,.3);}
+.upload-preview-item{position:relative;}
+.upload-preview-item .remove-img{position:absolute;top:-6px;right:-6px;background:var(--deep);border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.admin-save-btn{background:linear-gradient(135deg,var(--rose),var(--deep));border:none;border-radius:50px;color:#fff;font-family:'Lato',sans-serif;font-size:14px;letter-spacing:1.5px;padding:14px 36px;cursor:pointer;box-shadow:0 4px 20px rgba(220,50,80,.4);transition:transform .15s;margin-bottom:10px;width:100%;}
+.admin-save-btn:hover{transform:scale(1.03);}
+.admin-save-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.admin-gallery-list{margin-bottom:20px;text-align:left;}
+.admin-gallery-item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,150,150,.1);border-radius:12px;padding:10px 14px;margin-bottom:8px;}
+.admin-gallery-item img{width:52px;height:52px;object-fit:cover;border-radius:6px;}
+.admin-gallery-item-info{flex:1;font-size:12px;color:rgba(255,200,200,.5);letter-spacing:.5px;}
+.admin-gallery-item button{background:none;border:1px solid rgba(255,100,100,.3);border-radius:8px;color:rgba(255,150,150,.7);font-size:11px;padding:5px 10px;cursor:pointer;transition:all .2s;}
+.admin-gallery-item button:hover{background:rgba(255,50,80,.15);color:#ff6b8a;}
+.admin-section-title{font-size:11px;color:rgba(255,200,200,.35);letter-spacing:4px;text-transform:uppercase;margin-bottom:14px;margin-top:8px;}
+.admin-success{color:#7fff9a;font-size:12px;letter-spacing:.5px;min-height:18px;margin-bottom:8px;}
+
+/* POLAROİD ALT BİLGİ */
+.polaroid-meta{padding:4px 2px 0;text-align:center;}
+.polaroid-date{font-family:'Dancing Script',cursive;font-size:13px;color:#c0143c;font-weight:600;display:block;line-height:1.3;}
+.polaroid-location{font-size:10px;color:rgba(80,20,40,.65);letter-spacing:.5px;display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.polaroid-location::before{content:'📍 ';}
+
+/* GALERİ HARİTASI */
+.map-section{width:100%;max-width:700px;margin-top:18px;}
+.map-section-title{font-size:10px;color:rgba(255,200,200,.3);letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:10px;}
+#memoryMap{width:100%;height:260px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,150,150,.15);box-shadow:0 4px 30px rgba(0,0,0,.4);}
+
+/* ADMİN - KONUM & TARİH ALANLARI */
+.pending-photo-form{background:rgba(255,255,255,.03);border:1px solid rgba(255,150,150,.12);border-radius:12px;padding:14px;margin-bottom:10px;}
+.pending-photo-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pending-photo-header img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,150,150,.2);}
+.pending-photo-header-info{flex:1;font-size:12px;color:rgba(255,200,200,.5);letter-spacing:.5px;}
+.pending-photo-header .remove-img{background:rgba(200,20,60,.25);border:none;border-radius:50%;width:22px;height:22px;color:#ff8a9a;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.field-row{display:flex;gap:8px;margin-bottom:8px;}
+.field-row:last-child{margin-bottom:0;}
+.field-wrap{flex:1;display:flex;flex-direction:column;gap:4px;}
+.field-label{font-size:10px;color:rgba(255,200,200,.35);letter-spacing:2px;text-transform:uppercase;}
+.field-input{background:rgba(255,255,255,.06);border:1px solid rgba(255,150,150,.18);border-radius:9px;padding:9px 12px;color:#ffd6de;font-family:'Lato',sans-serif;font-size:13px;outline:none;transition:border-color .2s;width:100%;}
+.field-input:focus{border-color:rgba(255,150,150,.45);}
+.field-input::placeholder{color:rgba(255,200,200,.22);}
+.location-row{display:flex;gap:6px;align-items:flex-end;}
+.location-row .field-wrap{flex:1;}
+.btn-gps{background:rgba(255,80,100,.15);border:1px solid rgba(255,150,150,.25);border-radius:9px;color:rgba(255,200,210,.7);font-size:18px;padding:9px 12px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-gps:hover{background:rgba(255,80,100,.3);}
 </style>
 </head>
 <body>
@@ -177,7 +248,11 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     <span style="font-family:'Dancing Script',cursive;font-size:18px;color:rgba(255,200,200,.4);">an&#305;lar&#305;m&#305;z</span>
     <button class="ctrl-btn" onclick="scrollPolaroid(1)">&#8250;</button>
   </div>
-  <button class="btn-back" onclick="goBack('successScreen')">&#8592; Geri D&#246;n</button>
+  <div class="map-section">
+    <div class="map-section-title">&#10022; an&#305; haritas&#305; &#10022;</div>
+    <div id="memoryMap"></div>
+  </div>
+  <button class="btn-back" style="margin-top:18px;" onclick="goBack('successScreen')">&#8592; Geri D&#246;n</button>
 </div>
 
 <!-- EKRAN 4: ŞİİR -->
@@ -238,6 +313,43 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     </div>
   </div>
   <button class="btn-back" style="margin-top:24px;" onclick="goBack('successScreen')">&#8592; Geri D&#246;n</button>
+</div>
+
+<!-- ŞİFRE MODALI -->
+<div id="adminModal">
+  <div class="admin-box">
+    <div class="admin-title">🔐 Admin Girişi</div>
+    <div class="admin-sub">Gizli Alan</div>
+    <div class="admin-err" id="adminErr"></div>
+    <input class="admin-input" type="password" id="adminPassInput" placeholder="Şifre..." autocomplete="off" />
+    <button class="admin-btn" onclick="checkAdminPass()">Giriş Yap</button>
+    <button class="admin-cancel" onclick="closeAdminModal()">İptal</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL EKRANI -->
+<div class="screen" id="adminScreen">
+  <div class="admin-panel-box">
+    <div class="admin-panel-title">🔑 Admin Paneli</div>
+    <div class="admin-panel-sub">Anılar Bölümü Yönetimi</div>
+
+    <div class="admin-section-title">Yeni Fotoğraf Ekle</div>
+    <div class="upload-area" id="uploadArea">
+      <input type="file" accept="image/*" multiple id="photoFileInput" onchange="handlePhotoSelect(event)" />
+      <span class="upload-icon">📸</span>
+      <div class="upload-label">Tıkla veya fotoğraf sürükle<br><span>JPG, PNG, WEBP desteklenir</span></div>
+    </div>
+
+    <div id="uploadPreview"></div>
+
+    <div class="admin-success" id="adminSuccess"></div>
+    <button class="admin-save-btn" id="adminSaveBtn" onclick="savePhotos()" disabled>Galeriye Ekle 💾</button>
+
+    <div class="admin-section-title" style="margin-top:24px;">Eklenen Fotoğraflar</div>
+    <div class="admin-gallery-list" id="adminGalleryList"></div>
+
+    <button class="btn-back" style="margin-top:8px;" onclick="goBack('successScreen')">← Geri Dön</button>
+  </div>
 </div>
 
 <script>
@@ -365,7 +477,7 @@ function startCounter(){
 }
 
 function goScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
-function goGallery(){goScreen('galleryScreen');setTimeout(initDrag,100);setTimeout(initLightbox,200);}
+function goGallery(){goScreen('galleryScreen');setTimeout(initDrag,100);setTimeout(initLightbox,200);setTimeout(initMemoryMap,300);}
 function goPoem(){goScreen('poemScreen');renderPoem();}
 function goGame(){goScreen('gameScreen');}
 function goReasons(){goScreen('reasonsScreen');initReasons();}
@@ -781,6 +893,403 @@ function spawnReasonHeart(){
   setTimeout(function(){ el.remove(); }, 3000);
 }
 
+/* ===== ADMİN PANELİ ===== */
+var heartClickCount = 0;
+var heartClickTimer = null;
+var pendingPhotos = []; // {dataUrl, name, date, locationName, lat, lng}
+
+document.querySelector('.big-heart').addEventListener('click', function(){
+  heartClickCount++;
+  clearTimeout(heartClickTimer);
+  if(heartClickCount >= 3){
+    heartClickCount = 0;
+    openAdminModal();
+  } else {
+    heartClickTimer = setTimeout(function(){ heartClickCount = 0; }, 1500);
+  }
+});
+
+function openAdminModal(){
+  document.getElementById('adminPassInput').value = '';
+  document.getElementById('adminErr').textContent = '';
+  document.getElementById('adminModal').classList.add('open');
+  setTimeout(function(){ document.getElementById('adminPassInput').focus(); }, 200);
+}
+
+function closeAdminModal(){
+  document.getElementById('adminModal').classList.remove('open');
+}
+
+document.getElementById('adminPassInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') checkAdminPass();
+});
+
+function checkAdminPass(){
+  var val = document.getElementById('adminPassInput').value;
+  if(val === 'yusra<3yunus'){
+    closeAdminModal();
+    pendingPhotos = [];
+    renderUploadForms();
+    document.getElementById('adminSuccess').textContent = '';
+    document.getElementById('adminSaveBtn').disabled = true;
+    renderAdminGalleryList();
+    goScreen('adminScreen');
+  } else {
+    document.getElementById('adminErr').textContent = 'Şifre yanlış 💔';
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('adminPassInput').focus();
+    setTimeout(function(){ document.getElementById('adminErr').textContent = ''; }, 2000);
+  }
+}
+
+function todayStr(){
+  var d = new Date();
+  return d.getDate().toString().padStart(2,'0') + '.' + (d.getMonth()+1).toString().padStart(2,'0') + '.' + d.getFullYear();
+}
+
+function handlePhotoSelect(e){
+  var files = Array.from(e.target.files);
+  if(!files.length) return;
+  var loaded = 0;
+  files.forEach(function(file){
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      pendingPhotos.push({ dataUrl: ev.target.result, name: file.name, date: todayStr(), locationName: '', lat: null, lng: null });
+      loaded++;
+      if(loaded === files.length) renderUploadForms();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+function renderUploadForms(){
+  var wrap = document.getElementById('uploadPreview');
+  wrap.innerHTML = '';
+  if(!pendingPhotos.length){
+    document.getElementById('adminSaveBtn').disabled = true;
+    return;
+  }
+  pendingPhotos.forEach(function(p, i){
+    var form = document.createElement('div');
+    form.className = 'pending-photo-form';
+
+    // Header: küçük önizleme + kaldır
+    var header = document.createElement('div');
+    header.className = 'pending-photo-header';
+    var img = document.createElement('img');
+    img.src = p.dataUrl;
+    var info = document.createElement('div');
+    info.className = 'pending-photo-header-info';
+    info.textContent = 'Fotoğraf ' + (i+1);
+    var removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-img';
+    removeBtn.textContent = '✕';
+    removeBtn.onclick = function(){ pendingPhotos.splice(i,1); renderUploadForms(); };
+    header.appendChild(img); header.appendChild(info); header.appendChild(removeBtn);
+
+    // Tarih alanı
+    var dateRow = document.createElement('div');
+    dateRow.className = 'field-row';
+    var dateWrap = document.createElement('div');
+    dateWrap.className = 'field-wrap';
+    var dateLabel = document.createElement('div');
+    dateLabel.className = 'field-label';
+    dateLabel.textContent = 'Tarih';
+    var dateInput = document.createElement('input');
+    dateInput.type = 'text';
+    dateInput.className = 'field-input';
+    dateInput.placeholder = 'gg.aa.yyyy';
+    dateInput.value = p.date;
+    dateInput.oninput = function(){ pendingPhotos[i].date = this.value; };
+    var autoDateBtn = document.createElement('button');
+    autoDateBtn.className = 'btn-gps';
+    autoDateBtn.title = 'Bugünün tarihini kullan';
+    autoDateBtn.textContent = '📅';
+    autoDateBtn.style.cssText = 'padding:9px 10px;font-size:15px;';
+    autoDateBtn.onclick = function(){ pendingPhotos[i].date = todayStr(); dateInput.value = todayStr(); };
+    var dateInnerRow = document.createElement('div');
+    dateInnerRow.className = 'location-row';
+    dateInnerRow.appendChild(dateWrap);
+    dateInnerRow.appendChild(autoDateBtn);
+    dateWrap.appendChild(dateLabel); dateWrap.appendChild(dateInput);
+    dateRow.appendChild(dateInnerRow);
+
+    // Konum adı
+    var locRow = document.createElement('div');
+    locRow.className = 'field-row';
+    var locWrap = document.createElement('div');
+    locWrap.className = 'field-wrap';
+    var locLabel = document.createElement('div');
+    locLabel.className = 'field-label';
+    locLabel.textContent = 'Konum Adı';
+    var locInput = document.createElement('input');
+    locInput.type = 'text';
+    locInput.className = 'field-input';
+    locInput.placeholder = 'ör: Boğaz Köprüsü, İstanbul';
+    locInput.value = p.locationName;
+    locInput.oninput = function(){ pendingPhotos[i].locationName = this.value; };
+    locWrap.appendChild(locLabel); locWrap.appendChild(locInput);
+
+    // GPS butonu
+    var gpsBtn = document.createElement('button');
+    gpsBtn.className = 'btn-gps';
+    gpsBtn.title = 'Mevcut konumu al';
+    gpsBtn.textContent = '📡';
+    gpsBtn.onclick = (function(idx, li){
+      return function(){
+        gpsBtn.textContent = '⏳';
+        if(!navigator.geolocation){ alert('Konum desteklenmiyor'); return; }
+        navigator.geolocation.getCurrentPosition(function(pos){
+          pendingPhotos[idx].lat = pos.coords.latitude;
+          pendingPhotos[idx].lng = pos.coords.longitude;
+          gpsBtn.textContent = '✓';
+          // Reverse geocode ile konum adı al
+          fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+pos.coords.latitude+'&lon='+pos.coords.longitude)
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+              var name = data.address.city || data.address.town || data.address.village || data.address.county || '';
+              var country = data.address.country || '';
+              var full = name + (name && country ? ', ' + country : country);
+              if(!pendingPhotos[idx].locationName) {
+                pendingPhotos[idx].locationName = full;
+                li.value = full;
+              }
+            }).catch(function(){});
+        }, function(){ gpsBtn.textContent = '📡'; alert('Konum alınamadı'); });
+      };
+    })(i, locInput);
+
+    var locInnerRow = document.createElement('div');
+    locInnerRow.className = 'location-row';
+    locInnerRow.appendChild(locWrap);
+    locInnerRow.appendChild(gpsBtn);
+    locRow.appendChild(locInnerRow);
+
+    // Koordinat satırı (opsiyonel manuel giriş)
+    var coordRow = document.createElement('div');
+    coordRow.className = 'field-row';
+    var latWrap = document.createElement('div'); latWrap.className = 'field-wrap';
+    var latLabel = document.createElement('div'); latLabel.className = 'field-label'; latLabel.textContent = 'Enlem (opsiyonel)';
+    var latInput = document.createElement('input'); latInput.type = 'number'; latInput.className = 'field-input'; latInput.placeholder = 'ör: 41.0082';
+    latInput.step = 'any';
+    if(p.lat) latInput.value = p.lat;
+    latInput.oninput = function(){ pendingPhotos[i].lat = parseFloat(this.value) || null; };
+    latWrap.appendChild(latLabel); latWrap.appendChild(latInput);
+
+    var lngWrap = document.createElement('div'); lngWrap.className = 'field-wrap';
+    var lngLabel = document.createElement('div'); lngLabel.className = 'field-label'; lngLabel.textContent = 'Boylam (opsiyonel)';
+    var lngInput = document.createElement('input'); lngInput.type = 'number'; lngInput.className = 'field-input'; lngInput.placeholder = 'ör: 28.9784';
+    lngInput.step = 'any';
+    if(p.lng) lngInput.value = p.lng;
+    lngInput.oninput = function(){ pendingPhotos[i].lng = parseFloat(this.value) || null; };
+    lngWrap.appendChild(lngLabel); lngWrap.appendChild(lngInput);
+    coordRow.appendChild(latWrap); coordRow.appendChild(lngWrap);
+
+    form.appendChild(header);
+    form.appendChild(dateRow);
+    form.appendChild(locRow);
+    form.appendChild(coordRow);
+    wrap.appendChild(form);
+  });
+  document.getElementById('adminSaveBtn').disabled = false;
+}
+
+function getStoredPhotos(){
+  try { return JSON.parse(localStorage.getItem('adminPhotos') || '[]'); }
+  catch(e){ return []; }
+}
+
+function saveStoredPhotos(arr){
+  localStorage.setItem('adminPhotos', JSON.stringify(arr));
+}
+
+function savePhotos(){
+  if(!pendingPhotos.length) return;
+  var stored = getStoredPhotos();
+  pendingPhotos.forEach(function(p){
+    stored.push({ dataUrl: p.dataUrl, id: Date.now() + Math.random(), date: p.date, locationName: p.locationName, lat: p.lat, lng: p.lng });
+  });
+  saveStoredPhotos(stored);
+  addPhotosToGallery(pendingPhotos);
+  pendingPhotos = [];
+  renderUploadForms();
+  renderAdminGalleryList();
+  var btn = document.getElementById('adminSaveBtn');
+  btn.disabled = true;
+  var successEl = document.getElementById('adminSuccess');
+  successEl.textContent = '✓ ' + stored.length + ' fotoğraf galeride!';
+  setTimeout(function(){ successEl.textContent = ''; }, 3000);
+}
+
+function makePolaroidEl(photoObj){
+  var rots = [-6,-4,-2,0,2,4,6,-3,3,-5,5,-1,1];
+  var track = document.getElementById('polaroidTrack');
+  var count = track.querySelectorAll('.polaroid').length;
+  var rot = rots[count % rots.length];
+  var div = document.createElement('div');
+  div.className = 'polaroid';
+  div.setAttribute('data-admin','1');
+  div.style.cssText = '--delay:0s;--rot:'+rot+'deg;';
+  div.style.opacity = '1';
+  div.style.transform = 'rotate('+rot+'deg) scale(0.9)';
+  var img = document.createElement('img');
+  img.src = photoObj.dataUrl;
+  img.alt = 'Anı';
+  var src = photoObj.dataUrl;
+  img.onclick = function(e){ e.stopPropagation(); openLightbox(src); };
+  var shine = document.createElement('div');
+  shine.className = 'polaroid-shine';
+  div.appendChild(img);
+  div.appendChild(shine);
+  // Meta bilgi
+  if(photoObj.date || photoObj.locationName){
+    var meta = document.createElement('div');
+    meta.className = 'polaroid-meta';
+    if(photoObj.date){
+      var dateSpan = document.createElement('span');
+      dateSpan.className = 'polaroid-date';
+      dateSpan.textContent = photoObj.date;
+      meta.appendChild(dateSpan);
+    }
+    if(photoObj.locationName){
+      var locSpan = document.createElement('span');
+      locSpan.className = 'polaroid-location';
+      locSpan.textContent = photoObj.locationName;
+      meta.appendChild(locSpan);
+    }
+    div.appendChild(meta);
+  }
+  return div;
+}
+
+function addPhotosToGallery(photos){
+  var track = document.getElementById('polaroidTrack');
+  photos.forEach(function(p){
+    var el = makePolaroidEl(p);
+    track.appendChild(el);
+  });
+  refreshMemoryMap();
+}
+
+function renderAdminGalleryList(){
+  var list = document.getElementById('adminGalleryList');
+  var stored = getStoredPhotos();
+  list.innerHTML = '';
+  if(!stored.length){
+    list.innerHTML = '<div style="font-size:12px;color:rgba(255,200,200,.25);letter-spacing:1px;text-align:center;padding:12px 0;">Henüz eklenen fotoğraf yok</div>';
+    return;
+  }
+  stored.forEach(function(p, i){
+    var item = document.createElement('div');
+    item.className = 'admin-gallery-item';
+    var img = document.createElement('img');
+    img.src = p.dataUrl;
+    var info = document.createElement('div');
+    info.className = 'admin-gallery-item-info';
+    info.innerHTML = 'Fotoğraf ' + (i+1) + (p.date ? '<br><span style="color:rgba(255,180,190,.4)">'+p.date+'</span>' : '') + (p.locationName ? '<br><span style="color:rgba(255,180,190,.3)">📍 '+p.locationName+'</span>' : '');
+    var delBtn = document.createElement('button');
+    delBtn.textContent = 'Sil';
+    delBtn.onclick = function(){
+      var arr = getStoredPhotos();
+      arr.splice(i, 1);
+      saveStoredPhotos(arr);
+      renderAdminGalleryList();
+      rebuildGalleryFromStorage();
+    };
+    item.appendChild(img);
+    item.appendChild(info);
+    item.appendChild(delBtn);
+    list.appendChild(item);
+  });
+}
+
+function rebuildGalleryFromStorage(){
+  var track = document.getElementById('polaroidTrack');
+  track.querySelectorAll('[data-admin]').forEach(function(p){ p.remove(); });
+  var stored = getStoredPhotos();
+  stored.forEach(function(p){
+    var el = makePolaroidEl(p);
+    track.appendChild(el);
+  });
+  refreshMemoryMap();
+}
+
+/* ===== ANI HARİTASI (Leaflet) ===== */
+var memoryMapInstance = null;
+var mapMarkersLayer = null;
+
+function initMemoryMap(){
+  if(memoryMapInstance) return;
+  // Leaflet CSS
+  if(!document.getElementById('leafletCss')){
+    var lc = document.createElement('link');
+    lc.id = 'leafletCss';
+    lc.rel = 'stylesheet';
+    lc.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(lc);
+  }
+  // Leaflet JS
+  if(typeof L === 'undefined'){
+    var ls = document.createElement('script');
+    ls.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    ls.onload = function(){ buildMap(); };
+    document.head.appendChild(ls);
+  } else {
+    buildMap();
+  }
+}
+
+function buildMap(){
+  var mapEl = document.getElementById('memoryMap');
+  memoryMapInstance = L.map(mapEl, { zoomControl:true, attributionControl:false }).setView([39.9, 32.8], 5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19, subdomains:'abcd'
+  }).addTo(memoryMapInstance);
+  mapMarkersLayer = L.layerGroup().addTo(memoryMapInstance);
+  refreshMemoryMap();
+}
+
+function refreshMemoryMap(){
+  if(!memoryMapInstance || !mapMarkersLayer) return;
+  mapMarkersLayer.clearLayers();
+  var stored = getStoredPhotos();
+  var bounds = [];
+  stored.forEach(function(p){
+    if(!p.lat || !p.lng) return;
+    var icon = L.divIcon({
+      className: '',
+      html: '<div style="width:48px;height:48px;border-radius:50% 50% 50% 0;background:#e8334a;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(220,50,80,.7);border:2px solid #fff;"><img src=\''+p.dataUrl+'\' style=\'width:36px;height:36px;object-fit:cover;border-radius:50%;transform:rotate(45deg);\'></div>',
+      iconSize: [48, 48],
+      iconAnchor: [24, 48],
+      popupAnchor: [0, -50]
+    });
+    var marker = L.marker([p.lat, p.lng], {icon: icon});
+    var popupHtml = '<div style="text-align:center;font-family:Lato,sans-serif;">'
+      + '<img src=\''+p.dataUrl+'\' style=\'width:120px;height:90px;object-fit:cover;border-radius:8px;border:2px solid #e8334a;display:block;margin:0 auto 6px;\'>'
+      + (p.date ? '<div style="font-size:12px;color:#c0143c;font-weight:600;font-family:Dancing Script,cursive;">'+p.date+'</div>' : '')
+      + (p.locationName ? '<div style="font-size:11px;color:#888;margin-top:2px;">📍 '+p.locationName+'</div>' : '')
+      + '</div>';
+    marker.bindPopup(popupHtml, {maxWidth:160});
+    mapMarkersLayer.addLayer(marker);
+    bounds.push([p.lat, p.lng]);
+  });
+  if(bounds.length === 1){
+    memoryMapInstance.setView(bounds[0], 12);
+  } else if(bounds.length > 1){
+    memoryMapInstance.fitBounds(bounds, {padding:[30,30]});
+  }
+}
+
+// Sayfa yüklendiğinde kayıtlı fotoğrafları galeriye ekle
+(function loadStoredPhotosOnStart(){
+  var stored = getStoredPhotos();
+  if(!stored.length) return;
+  var track = document.getElementById('polaroidTrack');
+  stored.forEach(function(p){
+    var el = makePolaroidEl(p);
+    track.appendChild(el);
+  });
+})();
+
 </script>
-</body>
-</html>
