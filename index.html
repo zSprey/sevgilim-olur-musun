@@ -243,16 +243,11 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .btn-share-card:hover{background:rgba(255,80,100,.12);color:var(--blush);}
 
 </style>
-  <!-- Firebase SDK -->
-  <script type="module">
-    // ═══════════════════════════════════════════════
-    // FIREBASE YAPILANDIRMASI — buraya kendi değerlerini gir
-    // ═══════════════════════════════════════════════
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getDatabase, ref, set, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
-    import { getStorage, ref as sRef, uploadString, getDownloadURL, deleteObject, listAll } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-
-    const firebaseConfig = {
+  <!-- Firebase compat SDK (import gerektirmez) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script>
+    firebase.initializeApp({
       apiKey:            "AIzaSyCzX7dEzoedp73IH73FYjmNfXt-gQuAIlU",
       authDomain:        "sevgilim-55a56.firebaseapp.com",
       databaseURL:       "https://sevgilim-55a56-default-rtdb.europe-west1.firebasedatabase.app",
@@ -260,26 +255,15 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
       storageBucket:     "sevgilim-55a56.firebasestorage.app",
       messagingSenderId: "62336658880",
       appId:             "1:62336658880:web:66cf997a8338367d33ac25"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db  = getDatabase(app);
-    const storage = getStorage(app);
-
-    // Global olarak eriş
-    window._firebaseDb      = db;
-    window._firebaseStorage = storage;
-    window._firebaseRef     = ref;
-    window._firebaseSRef    = sRef;
-    window._firebaseSet     = set;
-    window._firebaseGet     = get;
-    window._firebaseOnValue = onValue;
-    window._firebaseGetDownloadURL = getDownloadURL;
-    window._firebaseUploadString   = uploadString;
-    window._firebaseDeleteObject   = deleteObject;
-    window._firebaseListAll        = listAll;
-    window._firebaseReady = true;
-    window.dispatchEvent(new Event('firebaseReady'));
+    });
+    var _db = firebase.database();
+    window._firebaseDb      = _db;
+    window._firebaseRef     = function(db, path){ return db.ref(path); };
+    window._firebaseSet     = function(ref, val){ return ref.set(val); };
+    window._firebaseGet     = function(ref){ return ref.once('value'); };
+    window._firebaseRemove  = function(ref){ return ref.remove(); };
+    window._firebaseOnValue = function(ref, cb){ ref.on('value', cb); };
+    window._firebaseReady   = true;
     console.log('✓ Firebase hazır');
   </script>
 </head>
@@ -318,7 +302,7 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
       <div class="counter-sep">&#10084;</div>
       <div class="counter-box"><div class="counter-num" id="cMins">0</div><div class="counter-label">Dakika</div></div>
     </div>
-    <div class="success-sub">13 Aral&#305;k 2024&#8217;ten beri birlikteyiz &#128149;</div>
+    <div class="success-sub">13 Aral&#305;k 2024&#8217;ten beri sevgiliyiz &#128149;</div>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px;">
       <button class="btn-gallery" onclick="goGallery()">&#127902;&#65039; &nbsp;Foto&#287;raflar&#305;m&#305;z</button>
       <button class="btn-poem" onclick="goPoem()">&#128214; &nbsp;Sana Bir &#350;iir</button>
@@ -1306,8 +1290,22 @@ function renderUploadForms(){
 var _photoCache = null;
 
 function _fbReady(cb){
-  if(window._firebaseReady){ cb(); }
-  else { window.addEventListener('firebaseReady', cb, {once:true}); }
+  if(window._firebaseReady){ setTimeout(cb, 0); }
+  else {
+    var tries = 0;
+    var interval = setInterval(function(){
+      tries++;
+      if(window._firebaseReady){
+        clearInterval(interval);
+        cb();
+      } else if(tries > 50){
+        clearInterval(interval);
+        console.error('Firebase 5 saniyede hazır olmadı');
+        // Yine de dene
+        cb();
+      }
+    }, 100);
+  }
 }
 
 function getStoredPhotos(){
@@ -1360,47 +1358,72 @@ function saveStoredPhotos(arr){
   localStorage.setItem('adminPhotos', JSON.stringify(arr));
 }
 
-// Tek fotoğrafı Firebase'e yükle (base64 → Storage, metadata → DB)
+// Fotoğrafı sıkıştır (max 800px, kalite 0.7) → DB'ye kaydet
+function compressImage(dataUrl, cb){
+  var img = new Image();
+  img.onload = function(){
+    var MAX = 800;
+    var w = img.width, h = img.height;
+    if(w > MAX || h > MAX){
+      if(w > h){ h = Math.round(h * MAX / w); w = MAX; }
+      else      { w = Math.round(w * MAX / h); h = MAX; }
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    cb(canvas.toDataURL('image/jpeg', 0.72));
+  };
+  img.onerror = function(){ cb(dataUrl); };
+  img.src = dataUrl;
+}
+
 function uploadPhotoToFirebase(photoObj, order, cb){
   _fbReady(function(){
-    var fbKey = 'photo_' + Date.now() + '_' + Math.floor(Math.random()*9999);
-    var storageRef = window._firebaseSRef(window._firebaseStorage, 'photos/' + fbKey + '.jpg');
-
-    // base64 data url'den sadece data kısmını al
-    var dataUrl = photoObj.dataUrl;
-
-    window._firebaseUploadString(storageRef, dataUrl, 'data_url').then(function(){
-      return window._firebaseGetDownloadURL(storageRef);
-    }).then(function(downloadUrl){
+    compressImage(photoObj.dataUrl, function(compressed){
+      var fbKey = 'photo_' + Date.now() + '_' + Math.floor(Math.random()*9999);
       var record = {
         fbKey:        fbKey,
-        url:          downloadUrl,
+        dataUrl:      compressed,
         date:         photoObj.date         || '',
         locationName: photoObj.locationName || '',
         lat:          photoObj.lat          || null,
         lng:          photoObj.lng          || null,
         order:        order
       };
+      var done = false;
+      var timeout = setTimeout(function(){
+        if(done) return;
+        done = true;
+        console.error('Firebase zaman aşımı');
+        cb(new Error('timeout'), null);
+      }, 20000);
+
       var dbRef = window._firebaseRef(window._firebaseDb, 'photos/' + fbKey);
-      return window._firebaseSet(dbRef, record).then(function(){ return record; });
-    }).then(function(record){
-      cb(null, record);
-    }).catch(function(e){
-      console.error('Yükleme hatası:', e);
-      cb(e, null);
+      window._firebaseSet(dbRef, record)
+        .then(function(){
+          if(done) return;
+          done = true;
+          clearTimeout(timeout);
+          cb(null, record);
+        })
+        .catch(function(e){
+          if(done) return;
+          done = true;
+          clearTimeout(timeout);
+          console.error('DB yazma hatası:', e.message || e);
+          cb(e, null);
+        });
     });
   });
 }
 
-// Fotoğrafı Firebase'den sil
+// Fotoğrafı DB'den sil
 function deletePhotoFromFirebase(photo, cb){
   _fbReady(function(){
     var key = photo.fbKey;
     if(!key){ if(cb)cb(); return; }
-    var storageRef = window._firebaseSRef(window._firebaseStorage, 'photos/' + key + '.jpg');
     var dbRef = window._firebaseRef(window._firebaseDb, 'photos/' + key);
-    window._firebaseDeleteObject(storageRef).catch(function(){})
-      .then(function(){ return window._firebaseSet(dbRef, null); })
+    window._firebaseRemove(dbRef)
       .then(function(){ if(cb)cb(); })
       .catch(function(){ if(cb)cb(); });
   });
@@ -1420,15 +1443,19 @@ function savePhotos(){
 
   function uploadNext(i){
     if(i >= toUpload.length){
-      // Hepsi bitti
       pendingPhotos = [];
       renderUploadForms();
+      renderAdminGalleryList();
+      btn.disabled = false;
+      btn.textContent = 'Galeriye Ekle 💾';
       if(failed === 0){
         successEl.textContent = '✓ ' + uploaded + ' fotoğraf yüklendi!';
-      } else {
+      } else if(uploaded > 0){
         successEl.textContent = uploaded + ' yüklendi, ' + failed + ' başarısız.';
+      } else {
+        successEl.textContent = '⚠ Yüklenemedi — Firebase DB kurallarını kontrol et';
       }
-      setTimeout(function(){ successEl.textContent = ''; }, 4000);
+      setTimeout(function(){ successEl.textContent = ''; }, 6000);
       return;
     }
 
@@ -1445,15 +1472,8 @@ function savePhotos(){
         var cache = getStoredPhotos().slice();
         cache.push(record);
         saveStoredPhotos(cache);
-        // Galeriye ekle (URL ile)
-        var galleryPhoto = {
-          dataUrl: record.url,
-          date: record.date,
-          locationName: record.locationName,
-          lat: record.lat,
-          lng: record.lng
-        };
-        addPhotosToGallery([galleryPhoto]);
+        // Galeriye ekle
+        addPhotosToGallery([record]);
       }
       uploadNext(i+1);
     });
@@ -1462,11 +1482,6 @@ function savePhotos(){
   btn.textContent = 'Yükleniyor... ⏳';
   uploadNext(0);
 
-  // Upload sonrası render
-  setTimeout(function(){
-    btn.textContent = 'Galeriye Ekle 💾';
-    renderAdminGalleryList();
-  }, toUpload.length * 3000 + 1000);
 }
 
 function makePolaroidEl(photoObj){
@@ -1727,7 +1742,7 @@ var specialDays = [
   { type:'anniv',    label:'Yıl Dönümü',    icon:'💑', month:12, day:13 },
   { type:'birthday', label:'Yüsra Doğum Günü', icon:'🎂', month:3,  day:10 },
   { type:'birthday', label:'Yunus Doğum Günü', icon:'🎂', month:8,  day:29 },
-  { type:'special',  label:'İlk Buluşma',   icon:'🌹', month:12, day:13 },
+  { type:'special',  label:'İlk Tanışma',   icon:'🌹', month:2,  day:7  },
 ];
 
 // Milestone mesajları
@@ -1986,7 +2001,7 @@ var CAL_EVENTS = [
   { month:12, day:13, type:'anniv',    label:'💑 Yıl Dönümü',        color:'#e8334a' },
   { month:3,  day:10, type:'birthday', label:'🎂 Yüsra\u2019nın Doğum Günü', color:'#ffb3c1' },
   { month:12, day:29, type:'birthday', label:'🎂 Yunus\u2019un Doğum Günü',  color:'#ffb3c1' },
-  { month:12, day:13, type:'special',  label:'🌹 İlk Buluşma',         color:'#ffd700' },
+  { month:2,  day:7,  type:'special',  label:'🌹 İlk Tanışma',         color:'#ffd700' },
 ];
 
 // Milestone günlerini hesapla
