@@ -179,6 +179,44 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
 .location-row .field-wrap{flex:1;}
 .btn-gps{background:rgba(255,80,100,.15);border:1px solid rgba(255,150,150,.25);border-radius:9px;color:rgba(255,200,210,.7);font-size:18px;padding:9px 12px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-gps:hover{background:rgba(255,80,100,.3);}
+/* ===== BUCKET LIST ===== */
+#bucketScreen{background:linear-gradient(160deg,var(--bg3) 0%,var(--bg4) 50%,var(--bg3) 100%);}
+.bucket-outer{width:100%;max-width:460px;}
+.bucket-title{font-family:'Dancing Script',cursive;font-size:36px;font-weight:700;color:var(--blush);text-align:center;margin-bottom:4px;text-shadow:0 0 24px rgba(255,150,170,.4);}
+.bucket-sub{font-size:10px;color:rgba(255,200,200,.3);letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:20px;}
+.bucket-stats{display:flex;gap:12px;justify-content:center;margin-bottom:18px;}
+.bucket-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,150,150,.12);border-radius:14px;padding:10px 22px;text-align:center;}
+.bucket-stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--blush);line-height:1;}
+.bucket-stat-label{font-size:9px;color:rgba(255,200,200,.35);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.bucket-list{display:flex;flex-direction:column;gap:10px;width:100%;max-height:55vh;overflow-y:auto;padding:2px 4px;scrollbar-width:none;}
+.bucket-list::-webkit-scrollbar{display:none;}
+.bucket-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,150,150,.15);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all .3s;cursor:pointer;user-select:none;}
+.bucket-item:hover{background:rgba(255,80,100,.07);border-color:rgba(255,150,150,.3);}
+.bucket-item.done{background:rgba(255,80,100,.06);border-color:rgba(255,80,100,.25);}
+.bucket-check{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,150,150,.35);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .3s;}
+.bucket-item.done .bucket-check{background:var(--rose);border-color:var(--rose);}
+.bucket-item-text{flex:1;}
+.bucket-item-title{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,230,235,.9);line-height:1.4;}
+.bucket-item.done .bucket-item-title{text-decoration:line-through;color:rgba(255,200,200,.45);}
+.bucket-item-note{font-size:11px;color:rgba(255,180,200,.4);margin-top:3px;letter-spacing:.3px;}
+.bucket-item-emoji{font-size:22px;flex-shrink:0;}
+.bucket-empty{text-align:center;padding:40px 20px;color:rgba(255,200,200,.25);font-size:13px;letter-spacing:1px;}
+
+/* ADMİN - BUCKET LIST */
+.admin-bucket-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,150,150,.1);border-radius:12px;padding:10px 14px;margin-bottom:8px;}
+.admin-bucket-item-info{flex:1;font-size:12px;color:rgba(255,200,200,.5);}
+.admin-bucket-item button{background:none;border:1px solid rgba(255,100,100,.3);border-radius:8px;color:rgba(255,150,150,.7);font-size:11px;padding:4px 10px;cursor:pointer;transition:all .2s;margin-left:4px;}
+.admin-bucket-item button:hover{background:rgba(255,50,80,.15);}
+
+/* ===== TEMA SEÇİCİ ===== */
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px;}
+.theme-card{border-radius:14px;padding:10px 8px;cursor:pointer;text-align:center;border:2px solid transparent;transition:all .25s;position:relative;overflow:hidden;}
+.theme-card.active{border-color:rgba(255,255,255,.5);}
+.theme-card.active::after{content:'✓';position:absolute;top:5px;right:7px;font-size:11px;color:#fff;font-weight:700;}
+.theme-card:hover{transform:scale(1.04);}
+.theme-preview{height:36px;border-radius:8px;margin-bottom:6px;}
+.theme-name{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7);}
+
 /* ===== TAKVİM ===== */
 #calendarScreen{background:linear-gradient(160deg,var(--bg3) 0%,var(--bg4) 50%,var(--bg3) 100%);}
 .cal-outer{width:100%;max-width:400px;}
@@ -309,9 +347,10 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
       <button class="btn-poem" onclick="goGame()" style="color:rgba(255,200,210,.9);">&#127918; &nbsp;Oyun Oyna</button>
       <button class="btn-poem" onclick="goReasons()" style="color:rgba(255,200,210,.9);">&#127801; &nbsp;Seni Seviyorum &#199;&#252;nk&#252;...</button>
       <button class="btn-poem" onclick="goCalendar()" style="color:rgba(255,200,210,.9);">&#128197; &nbsp;2026 Takvimi</button>
+      <button class="btn-poem" onclick="goBucket()" style="color:rgba(255,200,210,.9);">&#127381; &nbsp;Yapılacaklar Listemiz</button>
     </div>
     <div class="anniversary-wrap" id="anniversaryWrap"></div>
-    <button class="btn-share-card" onclick="openLoveCard()">&#10024; Ka&#231; G&#252;nd&#252;r Seviliyorsun?</button>
+    <button class="btn-share-card" onclick="openLoveCard()">&#10024; Ka&#231; G&#252;nd&#252;r Sevgiliyiz?</button>
   </div>
 </div>
 
@@ -440,8 +479,60 @@ body{min-height:100vh;background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2)
     <div class="admin-section-title">Eklenen Fotoğraflar</div>
     <div class="admin-gallery-list" id="adminGalleryList"></div>
 
+    <div class="admin-section-title" style="margin-top:24px;">Yapılacaklar Listesi</div>
+
+    <div class="pending-photo-form" style="margin-bottom:10px;">
+      <div class="field-row">
+        <div class="field-wrap">
+          <div class="field-label">Başlık</div>
+          <input class="field-input" type="text" id="bucketNewTitle" placeholder="ör: Boğaz'da gün batımı izle" />
+        </div>
+        <div class="field-wrap" style="max-width:80px;">
+          <div class="field-label">Emoji</div>
+          <input class="field-input" type="text" id="bucketNewEmoji" placeholder="🌅" maxlength="2" style="text-align:center;font-size:18px;" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-wrap">
+          <div class="field-label">Not (opsiyonel)</div>
+          <input class="field-input" type="text" id="bucketNewNote" placeholder="ör: İlkbaharda" />
+        </div>
+      </div>
+      <button class="admin-save-btn" style="margin-top:8px;" onclick="addBucketItem()">+ Listeye Ekle</button>
+    </div>
+
+    <div id="adminBucketList"></div>
+
+    <div class="admin-section-title" style="margin-top:24px;">Site Teması</div>
+    <div class="theme-grid" id="themeGrid"></div>
+    <div class="admin-success" id="themeSuccess" style="text-align:center;"></div>
+
     <button class="btn-back" style="margin-top:8px;" onclick="goBack('successScreen')">← Geri Dön</button>
   </div>
+</div>
+
+<!-- EKRAN: YAPILACAKLAR -->
+<div class="screen" id="bucketScreen">
+  <div class="bucket-outer">
+    <div class="bucket-title">&#127381; Listemiz</div>
+    <div class="bucket-sub">&#10022; birlikte yapacaklarımız &#10022;</div>
+    <div class="bucket-stats">
+      <div class="bucket-stat">
+        <div class="bucket-stat-num" id="bucketTotal">0</div>
+        <div class="bucket-stat-label">Toplam</div>
+      </div>
+      <div class="bucket-stat">
+        <div class="bucket-stat-num" id="bucketDone">0</div>
+        <div class="bucket-stat-label">Tamamlandı</div>
+      </div>
+      <div class="bucket-stat">
+        <div class="bucket-stat-num" id="bucketLeft">0</div>
+        <div class="bucket-stat-label">Kaldı</div>
+      </div>
+    </div>
+    <div class="bucket-list" id="bucketList"></div>
+  </div>
+  <button class="btn-back" style="margin-top:20px;" onclick="goBack('successScreen')">&#8592; Geri D&#246;n</button>
 </div>
 
 <!-- EKRAN: TAKVİM -->
@@ -1076,20 +1167,21 @@ function checkAdminPass(){
     document.getElementById('adminSuccess').textContent = '';
     document.getElementById('adminSaveBtn').disabled = true;
     goScreen('adminScreen');
-    // Firebase'den güncel listeyi çek
     var fbStatus = document.getElementById('fbStatusWrap');
     if(fbStatus){
       if(window._firebaseReady){
-        fbStatus.textContent = '✓ Firebase bağlı — fotoğraflar herkeste görünür';
+        fbStatus.textContent = '✓ Firebase bağlı — değişiklikler herkeste görünür';
         fbStatus.style.color = 'rgba(100,255,150,.5)';
       } else {
-        fbStatus.textContent = '⚠ Firebase yapılandırılmamış — fotoğraflar sadece bu cihazda';
+        fbStatus.textContent = '⚠ Firebase bağlı değil';
         fbStatus.style.color = 'rgba(255,180,80,.5)';
       }
     }
     getStoredPhotosRemote(function(){
       renderAdminGalleryList();
     });
+    renderAdminBucketList();
+    renderThemeGrid();
   } else {
     document.getElementById('adminErr').textContent = 'Şifre yanlış 💔';
     document.getElementById('adminPassInput').value = '';
@@ -1720,8 +1812,10 @@ function refreshMemoryMap(){
   }
 }
 
-// Sayfa yüklenince Firebase'den fotoğrafları yükle + realtime dinle
+// Sayfa yüklenince tema + fotoğrafları yükle
 (function loadStoredPhotosOnStart(){
+  loadThemeFromFirebase();
+  loadBucketFromFirebase();
   getStoredPhotosRemote(function(photos){
     var track = document.getElementById('polaroidTrack');
     track.querySelectorAll('[data-admin]').forEach(function(el){ el.remove(); });
@@ -1902,13 +1996,13 @@ function drawLoveCard(){
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(60, 54); ctx.lineTo(W-60, 54); ctx.stroke();
 
-  // "Kaç Gündür Seviliyorsun?" üst başlık
+  // "Kaç Gündür Sevgiliyiz?" üst başlık
   ctx.save();
   ctx.fillStyle = 'rgba(255,200,200,0.35)';
   ctx.font = '300 13px Lato, sans-serif';
   ctx.letterSpacing = '5px';
   ctx.textAlign = 'center';
-  ctx.fillText('KAÇ GÜNDÜR SEVİLİYORSUN?', W/2, 42);
+  ctx.fillText('KAÇ GÜNDÜR SEVGİLİYİZ?', W/2, 42);
   ctx.restore();
 
   // Büyük gün sayısı
@@ -1974,6 +2068,240 @@ function downloadLoveCard(){
   link.href = canvas.toDataURL('image/png');
   link.click();
 }
+
+
+
+/* ===== YAPILACAKLAR LİSTESİ ===== */
+var _bucketCache = null;
+
+function getBucketItems(){
+  return _bucketCache || JSON.parse(localStorage.getItem('bucketItems')||'[]');
+}
+
+function loadBucketFromFirebase(cb){
+  _fbReady(function(){
+    var ref = window._firebaseRef(window._firebaseDb, 'bucket');
+    window._firebaseOnValue(ref, function(snap){
+      var data = snap.val();
+      var items = data ? Object.values(data).sort(function(a,b){return (a.order||0)-(b.order||0);}) : [];
+      _bucketCache = items;
+      localStorage.setItem('bucketItems', JSON.stringify(items));
+      renderBucketList();
+      renderAdminBucketList();
+      if(cb) cb(items);
+    });
+  });
+}
+
+function addBucketItem(){
+  var title = document.getElementById('bucketNewTitle').value.trim();
+  var emoji = document.getElementById('bucketNewEmoji').value.trim() || '✨';
+  var note  = document.getElementById('bucketNewNote').value.trim();
+  if(!title) return;
+  _fbReady(function(){
+    var items = getBucketItems();
+    var key = 'bucket_' + Date.now();
+    var item = { key:key, title:title, emoji:emoji, note:note, done:false, order:items.length };
+    var ref = window._firebaseRef(window._firebaseDb, 'bucket/' + key);
+    window._firebaseSet(ref, item).then(function(){
+      document.getElementById('bucketNewTitle').value = '';
+      document.getElementById('bucketNewEmoji').value = '';
+      document.getElementById('bucketNewNote').value  = '';
+    });
+  });
+}
+
+function toggleBucketItem(key, done){
+  _fbReady(function(){
+    var ref = window._firebaseRef(window._firebaseDb, 'bucket/' + key + '/done');
+    window._firebaseSet(ref, !done);
+  });
+}
+
+function deleteBucketItem(key){
+  _fbReady(function(){
+    var ref = window._firebaseRef(window._firebaseDb, 'bucket/' + key);
+    window._firebaseRemove(ref);
+  });
+}
+
+function renderBucketList(){
+  var list = document.getElementById('bucketList');
+  if(!list) return;
+  var items = getBucketItems();
+  var total = items.length;
+  var done  = items.filter(function(i){return i.done;}).length;
+  var el = document.getElementById('bucketTotal');
+  if(el) el.textContent = total;
+  el = document.getElementById('bucketDone');
+  if(el) el.textContent = done;
+  el = document.getElementById('bucketLeft');
+  if(el) el.textContent = total - done;
+
+  list.innerHTML = '';
+  if(!total){
+    list.innerHTML = '<div class="bucket-empty">Henüz hiç eklenmemiş 🌸</div>';
+    return;
+  }
+  // Yapılmayanlar önce
+  var sorted = items.slice().sort(function(a,b){
+    if(a.done === b.done) return (a.order||0)-(b.order||0);
+    return a.done ? 1 : -1;
+  });
+  sorted.forEach(function(item){
+    var div = document.createElement('div');
+    div.className = 'bucket-item' + (item.done ? ' done' : '');
+    div.innerHTML =
+      '<div class="bucket-check">' + (item.done ? '♥' : '') + '</div>' +
+      '<div class="bucket-item-text">' +
+        '<div class="bucket-item-title">' + item.title + '</div>' +
+        (item.note ? '<div class="bucket-item-note">' + item.note + '</div>' : '') +
+      '</div>' +
+      '<div class="bucket-item-emoji">' + (item.emoji||'✨') + '</div>';
+    div.onclick = function(){ toggleBucketItem(item.key, item.done); };
+    list.appendChild(div);
+  });
+}
+
+function renderAdminBucketList(){
+  var list = document.getElementById('adminBucketList');
+  if(!list) return;
+  var items = getBucketItems();
+  list.innerHTML = '';
+  if(!items.length){
+    list.innerHTML = '<div style="font-size:12px;color:rgba(255,200,200,.25);text-align:center;padding:8px 0;">Henüz madde yok</div>';
+    return;
+  }
+  items.forEach(function(item){
+    var div = document.createElement('div');
+    div.className = 'admin-bucket-item';
+    div.innerHTML =
+      '<span style="font-size:18px;">' + (item.emoji||'✨') + '</span>' +
+      '<div class="admin-bucket-item-info">' +
+        '<div>' + item.title + (item.done ? ' <span style="color:rgba(100,255,150,.5)">✓</span>' : '') + '</div>' +
+        (item.note ? '<div style="opacity:.5">' + item.note + '</div>' : '') +
+      '</div>';
+    var delBtn = document.createElement('button');
+    delBtn.textContent = 'Sil';
+    delBtn.onclick = (function(k){ return function(){ deleteBucketItem(k); }; })(item.key);
+    var toggleBtn = document.createElement('button');
+    toggleBtn.textContent = item.done ? 'Geri Al' : 'Tamam';
+    toggleBtn.onclick = (function(k, d){ return function(){ toggleBucketItem(k, d); }; })(item.key, item.done);
+    div.appendChild(toggleBtn);
+    div.appendChild(delBtn);
+    list.appendChild(div);
+  });
+}
+
+function goBucket(){
+  goScreen('bucketScreen');
+  renderBucketList();
+}
+
+/* ===== TEMA SİSTEMİ ===== */
+var THEMES = {
+  kirmizi: {
+    name: 'Kırmızı Aşk',
+    rose:'#e8334a', deep:'#c0143c', blush:'#ffd6de',
+    bg1:'#1a0010', bg2:'#3d0020', bg3:'#120008', bg4:'#2d0018',
+    preview: 'linear-gradient(135deg,#1a0010,#e8334a,#1a0010)'
+  },
+  mor: {
+    name: 'Mor Büyü',
+    rose:'#9b59b6', deep:'#6c3483', blush:'#e8daef',
+    bg1:'#0d0017', bg2:'#2e0050', bg3:'#090012', bg4:'#1e0035',
+    preview: 'linear-gradient(135deg,#0d0017,#9b59b6,#0d0017)'
+  },
+  mavi: {
+    name: 'Mavi Gece',
+    rose:'#2980b9', deep:'#1a5276', blush:'#d6eaf8',
+    bg1:'#000d1a', bg2:'#00204d', bg3:'#000a12', bg4:'#001533',
+    preview: 'linear-gradient(135deg,#000d1a,#2980b9,#000d1a)'
+  },
+  yesil: {
+    name: 'Yeşil Orman',
+    rose:'#27ae60', deep:'#1e8449', blush:'#d5f5e3',
+    bg1:'#001a0d', bg2:'#003d1a', bg3:'#00120a', bg4:'#002d14',
+    preview: 'linear-gradient(135deg,#001a0d,#27ae60,#001a0d)'
+  },
+  altin: {
+    name: 'Altın Işık',
+    rose:'#d4ac0d', deep:'#9a7d0a', blush:'#fef9e7',
+    bg1:'#1a1400', bg2:'#3d3000', bg3:'#120e00', bg4:'#2d2400',
+    preview: 'linear-gradient(135deg,#1a1400,#d4ac0d,#1a1400)'
+  },
+  pembe: {
+    name: 'Pembe Şeker',
+    rose:'#e91e8c', deep:'#c2185b', blush:'#fce4ec',
+    bg1:'#1a0011', bg2:'#3d0028', bg3:'#120009', bg4:'#2d001d',
+    preview: 'linear-gradient(135deg,#1a0011,#e91e8c,#1a0011)'
+  }
+};
+
+var _activeTheme = 'kirmizi';
+
+function applyTheme(key){
+  var t = THEMES[key];
+  if(!t) return;
+  _activeTheme = key;
+  var root = document.documentElement;
+  root.style.setProperty('--rose', t.rose);
+  root.style.setProperty('--deep', t.deep);
+  root.style.setProperty('--blush', t.blush);
+  root.style.setProperty('--bg1', t.bg1);
+  root.style.setProperty('--bg2', t.bg2);
+  root.style.setProperty('--bg3', t.bg3);
+  root.style.setProperty('--bg4', t.bg4);
+  document.body.style.background = 'linear-gradient(135deg,'+t.bg1+' 0%,'+t.bg2+' 50%,'+t.bg1+' 100%)';
+  // Aktif kartı güncelle
+  document.querySelectorAll('.theme-card').forEach(function(c){
+    c.classList.toggle('active', c.getAttribute('data-theme') === key);
+  });
+}
+
+function saveThemeToFirebase(key){
+  _fbReady(function(){
+    var ref = window._firebaseRef(window._firebaseDb, 'settings/theme');
+    window._firebaseSet(ref, key).then(function(){
+      var el = document.getElementById('themeSuccess');
+      if(el){ el.textContent = '✓ Tema kaydedildi!'; setTimeout(function(){el.textContent='';},2500); }
+    });
+  });
+}
+
+function loadThemeFromFirebase(){
+  _fbReady(function(){
+    var ref = window._firebaseRef(window._firebaseDb, 'settings/theme');
+    window._firebaseOnValue(ref, function(snap){
+      var key = snap.val();
+      if(key && THEMES[key]){
+        applyTheme(key);
+      }
+    });
+  });
+}
+
+function renderThemeGrid(){
+  var grid = document.getElementById('themeGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  Object.keys(THEMES).forEach(function(key){
+    var t = THEMES[key];
+    var card = document.createElement('div');
+    card.className = 'theme-card' + (key === _activeTheme ? ' active' : '');
+    card.setAttribute('data-theme', key);
+    card.style.background = t.bg1;
+    card.innerHTML = '<div class="theme-preview" style="background:'+t.preview+'"></div><div class="theme-name">'+t.name+'</div>';
+    card.onclick = function(){
+      applyTheme(key);
+      saveThemeToFirebase(key);
+    };
+    grid.appendChild(card);
+  });
+}
+
+// Admin açıldığında tema grid'ini render et
+var _origCheckAdminPass = checkAdminPass;
 
 /* ===== BAŞLANGIÇTA KONTROL ET ===== */
 // startCounter override - milestone ve anniversary da başlat
